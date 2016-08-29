@@ -5,12 +5,12 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   
-  <title>WoodyOilove&#39;s Blog</title>
+  <title>Category: Java框架 | WoodyOilove&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Record little growth and share littel growth">
 <meta property="og:type" content="website">
 <meta property="og:title" content="WoodyOilove's Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/categories/Java框架/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
 <meta property="og:description" content="Record little growth and share littel growth">
 <meta name="twitter:card" content="summary">
@@ -80,111 +80,36 @@
     <div class="outer">
       <section id="main">
   
-    <article id="post-eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" class="article-date">
-  <time datetime="2016-08-26T16:00:00.000Z" itemprop="datePublished">2016-08-27</time>
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2016" class="archive-year">2016</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      <h3 href="/2016/08/24/IOC容器和Dependency Injection模式/" class="archive-article-date">
+  <time datetime="2016-08-23T16:00:00.000Z" itemprop="datePublished">Aug 24</time>
 </h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/开发工具/">开发工具</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
+      
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
+      <a class="archive-article-title" href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
     </h1>
   
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>“工若善其事，必先利其器”，掌握一定的快捷键将更有利于我们阅读代码，更方便地理清代码的结构，下面笔者将分享在eclipse&amp;Myeclipse和Intellij Idea这三个IDE中阅读源码时常用到的快捷键。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="http://yoursite.com/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" data-id="cisfxh8xm0001xwor4hne2d4u" class="article-share-link">分享到</a>
-        
-      </div>
-    </footer>
+    </header>
   </div>
-  </div>
-  </div>
-  
 </article>
-
-
-
   
-    <article id="post-IOC容器和Dependency Injection模式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/24/IOC容器和Dependency Injection模式/" class="article-date">
-  <time datetime="2016-08-23T16:00:00.000Z" itemprop="datePublished">2016-08-24</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>In the Java community there’s been a rush of lightweight containers that help to assemble components from different projects into a cohesive application. Underlying these containers is a common pattern to how they perform the wiring, a concept they refer under the very generic name of “Inversion of Control”. In this article I dig into how this pattern works, under the more specific name of “Dependency Injection”, and contrast it with the Service Locator alternative. The choice between them is less important than the principle of separating configuration from use.</p>
-<p>One of the entertaining things about the enterprise Java world is the huge amount of activity in building alternatives to the mainstream J2EE technologies, much of it happening in open source. A lot of this is a reaction to the heavyweight complexity in the mainstream J2EE world, but much of it is also exploring alternatives and coming up with creative ideas. A common issue to deal with is how to wire together different elements: how do you fit together this web controller architecture with that database interface backing when they were built by different teams with little knowledge of each other. A number of frameworks have taken a stab at this problem, and several are branching out to provide a general capability to assemble components from different layers. These are often referred to as lightweight containers, examples include PicoContainer, and Spring.</p>
-<p>Underlying these containers are a number of interesting design principles, things that go beyond both these specific containers and indeed the Java platform. Here I want to start exploring some of these principles. The examples I use are in Java, but like most of my writing the principles are equally applicable to other OO environments, particularly .NET.</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/24/IOC容器和Dependency Injection模式/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="http://yoursite.com/2016/08/24/IOC容器和Dependency Injection模式/" data-id="cisfxh8xf0000xwor3lb6z1fk" class="article-share-link">分享到</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
+    </div></section>
   
   
 </section>
