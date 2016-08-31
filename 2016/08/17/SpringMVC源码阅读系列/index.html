@@ -5,17 +5,33 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   
-  <title>Category: 开发工具 | WoodyOilove&#39;s Blog</title>
+  <title>SpringMVC源码阅读系列 | WoodyOilove&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Record little growth and share littel growth">
-<meta property="og:type" content="website">
-<meta property="og:title" content="WoodyOilove's Blog">
-<meta property="og:url" content="http://yoursite.com/categories/开发工具/index.html">
+  <meta name="description" content="SpringMVC框架之前有零散地阅读过源码，但缺乏系统性的整理，为此将自己阅读SpringMVC的过程重新整理记录为SpringMVC源码阅读系列。
+
+注：如没有特别说明的地方，Spring的版本是4.1.5
+
+本系列主涉及的内容有：Spring MVC的创建过程（SpringMVC源码阅读系列之一）
+Spring MVC处理请求过程(SpringMVC源码阅读系列之二)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC源码阅读系列">
+<meta property="og:url" content="http://yoursite.com/2016/08/17/SpringMVC源码阅读系列/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
-<meta property="og:description" content="Record little growth and share littel growth">
+<meta property="og:description" content="SpringMVC框架之前有零散地阅读过源码，但缺乏系统性的整理，为此将自己阅读SpringMVC的过程重新整理记录为SpringMVC源码阅读系列。
+
+注：如没有特别说明的地方，Spring的版本是4.1.5
+
+本系列主涉及的内容有：Spring MVC的创建过程（SpringMVC源码阅读系列之一）
+Spring MVC处理请求过程(SpringMVC源码阅读系列之二)">
+<meta property="og:updated_time" content="2016-08-31T10:12:35.042Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WoodyOilove's Blog">
-<meta name="twitter:description" content="Record little growth and share littel growth">
+<meta name="twitter:title" content="SpringMVC源码阅读系列">
+<meta name="twitter:description" content="SpringMVC框架之前有零散地阅读过源码，但缺乏系统性的整理，为此将自己阅读SpringMVC的过程重新整理记录为SpringMVC源码阅读系列。
+
+注：如没有特别说明的地方，Spring的版本是4.1.5
+
+本系列主涉及的内容有：Spring MVC的创建过程（SpringMVC源码阅读系列之一）
+Spring MVC处理请求过程(SpringMVC源码阅读系列之二)">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -78,40 +94,79 @@
 </header>
 
     <div class="outer">
-      <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <h3 href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" class="archive-article-date">
-  <time datetime="2016-08-26T16:00:00.000Z" itemprop="datePublished">Aug 27</time>
+      <section id="main"><article id="post-SpringMVC源码阅读系列" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/17/SpringMVC源码阅读系列/" class="article-date">
+  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">2016-08-17</time>
 </h3>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
+    <h1 class="article-title" itemprop="name">
+      SpringMVC源码阅读系列
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>SpringMVC框架之前有零散地阅读过源码，但缺乏系统性的整理，为此将自己阅读SpringMVC的过程重新整理记录为SpringMVC源码阅读系列。</p>
+<blockquote>
+<p>注：如没有特别说明的地方，Spring的版本是4.1.5</p>
+</blockquote>
+<p>本系列主涉及的内容有：<br><a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程（SpringMVC源码阅读系列之一）</a></p>
+<p><a href="/2016/08/23/Spring%20MVC处理请求过程（Spring%20MVC源码阅读系列之二）/">Spring MVC处理请求过程(SpringMVC源码阅读系列之二)</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/17/SpringMVC源码阅读系列/" data-id="cisikzroj000d68orl5027sks" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
   </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/17/Java实现简单的FTP服务器/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          Java实现简单的FTP服务器
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">Tomcat整体架构(Tomcat源码阅读系列之二)</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
-  
+
+
 </section>
       
       <aside id="sidebar">

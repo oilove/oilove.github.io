@@ -119,7 +119,7 @@
     <footer class="article-footer">
       <div class="article-footer-content">
         
-        <a data-url="http://yoursite.com/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" data-id="cisfxh8xm0001xwor4hne2d4u" class="article-share-link">分享到</a>
+        <a data-url="http://yoursite.com/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" data-id="cisikzroh000b68or9doarlse" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -173,7 +173,427 @@
     <footer class="article-footer">
       <div class="article-footer-content">
         
-        <a data-url="http://yoursite.com/2016/08/24/IOC容器和Dependency Injection模式/" data-id="cisfxh8xf0000xwor3lb6z1fk" class="article-share-link">分享到</a>
+        <a data-url="http://yoursite.com/2016/08/24/IOC容器和Dependency Injection模式/" data-id="cisikzrng000068or7t8ejt5m" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Spring MVC处理请求过程（Spring MVC源码阅读系列之二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" class="article-date">
+  <time datetime="2016-08-22T16:00:00.000Z" itemprop="datePublished">2016-08-23</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文是Spring MVC源码阅读系列的第二篇，在上一篇<a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）%2F">Spring MVC的创建过程</a>中我们介绍了SpringMVC的创建过程，本文讲给主要介绍当一个请求到达时，SpringMVC都做了些什么，即Spring MVC是如何处理请求的。</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>从上一篇<a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）%2F">Spring MVC的创建过程</a> 我们知道Spring的HttpServletBean继承于HttpServlet，熟悉Servlet编程的同学都知道我们要编写一个新的Servlet只需继承HttpServlet，并重写相应的方法即可，当一个新的请求到来时，首先从Servlet接口的service方法开始，在HttpServlet的service方法中根据请求的类型不同将请求路由到对应的方法，Spring MVC的HttpServlet继承于Httpservlet类，换句话说Spring MVC也是重写了HttpServlet相应的方法来处理请求，还是内有乾坤，下面我们将遵循由整体到局部的学习方式，先了解Spring MVC处理请求的整体过程。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" data-id="cisiqoxqv0002skor6w8ehluk" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Spring MVC的创建过程（SpringMVC源码阅读系列之一）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/" class="article-date">
+  <time datetime="2016-08-17T16:00:00.000Z" itemprop="datePublished">2016-08-18</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>通常我们在学习一个框架时，会先去了解这个框架的整体结构，它的基本工作方式是如何的，然后再去了解是如何使用的，最后也是不少初级程序员止步的地方，深入源码了解其实现以及实现的意图。在这篇文章中，我们主要介绍在服务器启动项目过程中，Spring MVC框架的创建过程。首先我们先来了解一下Spring MVC的整体结构</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/" data-id="cisimgbe60000o4or6hz40lns" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Java实现简单的FTP服务器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/17/Java实现简单的FTP服务器/" class="article-date">
+  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">2016-08-17</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>学习了Java网络编程了，为了检验自己的学习程序和熟悉相关的知识点，为此，使用Java Socket编程实现了一个简单的FTP服务器。以下记录了自己整个开发的流程。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/17/Java实现简单的FTP服务器/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/17/Java实现简单的FTP服务器/" data-id="cisikzro0000468orxclesbuy" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-SpringMVC源码阅读系列" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/17/SpringMVC源码阅读系列/" class="article-date">
+  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">2016-08-17</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/17/SpringMVC源码阅读系列/">SpringMVC源码阅读系列</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>SpringMVC框架之前有零散地阅读过源码，但缺乏系统性的整理，为此将自己阅读SpringMVC的过程重新整理记录为SpringMVC源码阅读系列。</p>
+<blockquote>
+<p>注：如没有特别说明的地方，Spring的版本是4.1.5</p>
+</blockquote>
+<p>本系列主涉及的内容有：<br><a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程（SpringMVC源码阅读系列之一）</a></p>
+<p><a href="/2016/08/23/Spring%20MVC处理请求过程（Spring%20MVC源码阅读系列之二）/">Spring MVC处理请求过程(SpringMVC源码阅读系列之二)</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/17/SpringMVC源码阅读系列/" data-id="cisikzroj000d68orl5027sks" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Tomcat整体架构（Tomcat源码阅读系列之二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" class="article-date">
+  <time datetime="2016-08-15T16:00:00.000Z" itemprop="datePublished">2016-08-16</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/">Tomcat整体架构(Tomcat源码阅读系列之二)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：<a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/">Tomcat源码分析环境搭建</a> 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" data-id="cisimdat300000worn9gxx5ko" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Tomcat源码阅读系列" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/15/Tomcat源码阅读系列/" class="article-date">
+  <time datetime="2016-08-14T16:00:00.000Z" itemprop="datePublished">2016-08-15</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/15/Tomcat源码阅读系列/">Tomcat源码阅读系列</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+        <p>再过十来天，就要不再是大三，而步入大四的殿堂了，求职面试的事会接踵而至，鉴于春招时的教训，自己的学习比较缺乏系统性地整理，向他人交流自己所掌握的技术能力仍有待提高，为此将自己阅读Tomcat源码的过程记录一下，并分享到博客中，让有同样兴趣的同学一起交流讨论。</p>
+<blockquote>
+<p>注：如没有特别说明的地方，Tomcat的版本是7.0.42</p>
+</blockquote>
+<p>本系列涉及的主要内容有：<br><a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/">Tomcat源码分析环境搭建(Tomcat源码阅读系列之一)</a><br><a href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/">Tomcat整体架构(Tomcat源码阅读系列之二)</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/15/Tomcat源码阅读系列/" data-id="cisikzroc000968orluwyf7vh" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-TCP建立连接3次握手及释放连接4次握手" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" class="article-date">
+  <time datetime="2016-08-09T16:00:00.000Z" itemprop="datePublished">2016-08-10</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/计算机网络/">计算机网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/">TCP建立连接3次握手即释放连接4次握手</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="TCP建立连接及释放连接示意图"><a href="#TCP建立连接及释放连接示意图" class="headerlink" title="TCP建立连接及释放连接示意图"></a>TCP建立连接及释放连接示意图</h1><p><img src="/img/TCPlinkAndRelease.png" alt="TCP连接与释放过程"><br><em>注：假设左边运行TCP客户程序，右边运行TCP服务器程序</em></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" data-id="cisikzro4000568orja034wk7" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/" class="article-date">
+  <time datetime="2016-08-08T16:00:00.000Z" itemprop="datePublished">2016-08-09</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/">Tomcat源码分析环境搭建(Tomcat源码阅读系列之一)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Tomcat是个不过的Http服务器，其源码是比较值得我们学习的。但是搭建Tomcat源码分析环境时，会存在各种各样的问题，我们在搭建Tomcat源码分析环境的花了比较多的时间在配置上，为了方便他人搭建Tomcat源码分析环境，少走我曾走过的弯路，现写篇关于Tomcat源码分析环境搭建的配置过程。其实Tomcat的官网也给出了<a href="http://tomcat.apache.org/tomcat-7.0-doc/building.html">Building Tomcat</a>的步骤，本人在配置环境的过程中也是主要参考该文档。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/" data-id="cisiqoxo00000skor2vd93lsx" class="article-share-link">分享到</a>
         
       </div>
     </footer>
@@ -205,6 +625,18 @@
             <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
           </li>
         
+          <li>
+            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
+          </li>
+        
       </ul>
     </div>
   </div>
@@ -214,7 +646,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">分類</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
     </div>
   </div>
 
@@ -223,7 +655,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">歸檔</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
     </div>
   </div>
 

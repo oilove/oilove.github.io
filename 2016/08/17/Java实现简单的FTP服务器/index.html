@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  
+  <title>Java实现简单的FTP服务器 | WoodyOilove&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="学习了Java网络编程了，为了检验自己的学习程序和熟悉相关的知识点，为此，使用Java Socket编程实现了一个简单的FTP服务器。以下记录了自己整个开发的流程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java实现简单的FTP服务器">
+<meta property="og:url" content="http://yoursite.com/2016/08/17/Java实现简单的FTP服务器/index.html">
+<meta property="og:site_name" content="WoodyOilove's Blog">
+<meta property="og:description" content="学习了Java网络编程了，为了检验自己的学习程序和熟悉相关的知识点，为此，使用Java Socket编程实现了一个简单的FTP服务器。以下记录了自己整个开发的流程。">
+<meta property="og:image" content="http://yoursite.com/img/FileHandlerProcess.png">
+<meta property="og:updated_time" content="2016-08-31T06:48:12.078Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java实现简单的FTP服务器">
+<meta name="twitter:description" content="学习了Java网络编程了，为了检验自己的学习程序和熟悉相关的知识点，为此，使用Java Socket编程实现了一个简单的FTP服务器。以下记录了自己整个开发的流程。">
+<meta name="twitter:image" content="http://yoursite.com/img/FileHandlerProcess.png">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/oilove"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">WoodyOilove&#39;s Blog</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara">H</li>
+        <li class="cara"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="100" width="100" viewBox="-50 -50 200 200">
+          <circle cx="50" cy="50" r="45" stroke-width="5" stroke="black" stroke-opacity="0.5" fill-opacity="0"></circle>
+          <rect x="47.5" y="27.5" width="5" height="25" rx="2.5" ry="2.5" fill="black" fill-opacity="0.5" transform="rotate(330 50 50)"></rect>
+          <rect x="48.5" y="16.5" width="3" height="35" rx="1.5" ry="1.5" fill="black" fill-opacity="0.5"></rect>
+        </svg></li>
+        <li class="cara">F</li>
+        <li class="cara">O</li>
+        <li class="cara">E</li>
+        <li class="cara">N</li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/">Home</a>
+      
+        <a class="main-nav-link" href="/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/about">About</a>
+      
+      <!--<a class="main-nav-link st-search-show-outputs">Search</a>-->
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-Java实现简单的FTP服务器" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/17/Java实现简单的FTP服务器/" class="article-date">
+  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">2016-08-17</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java实现简单的FTP服务器
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+          <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目錄</strong>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#FTP协议"><span class="toc-text">FTP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#工作机制概要"><span class="toc-text">工作机制概要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据表示"><span class="toc-text">数据表示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FTP主要命令"><span class="toc-text">FTP主要命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#响应信息"><span class="toc-text">响应信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#实践过程"><span class="toc-text">实践过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现的FTP命令"><span class="toc-text">实现的FTP命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实现思想"><span class="toc-text">实现思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#遇到的问题"><span class="toc-text">遇到的问题</span></a></li></ol></li></ol>
+          </div>
+        
+        <p>学习了Java网络编程了，为了检验自己的学习程序和熟悉相关的知识点，为此，使用Java Socket编程实现了一个简单的FTP服务器。以下记录了自己整个开发的流程。</p>
+<a id="more"></a>
+<h1 id="FTP协议"><a href="#FTP协议" class="headerlink" title="FTP协议"></a>FTP协议</h1><p>自己平时也有用过ftp协议进行文件的传输，知道FTP协议的默认端口是21，可对于底层是如何实现，客户端与服务端之间的通信时如何进行的并不是了解，为此，专门查看了TCP/IP详解协议卷中对FTP的描述，理解FTP的工作机制。</p>
+<h2 id="工作机制概要"><a href="#工作机制概要" class="headerlink" title="工作机制概要"></a>工作机制概要</h2><p>FTP是文件传输协议，与大多数其他的TCP应用不同，它在客户进程和服务器进程之间使用两个TCP连接，一个控制连接，默认使用TCP的21端口，它一直持续到客户进程与服务进程之间的通信完成为止，另一个按需可以随时创建和撤销的数据连接，用于数据传输，这条TCP连接是按照与控制用的连接相反的方向建立的，即客户端创建ServerSocket，而服务端创建Socket，而文件传输的处理过程如下：<br><img src="/img/FileHandlerProcess.png" alt="文件传输的处理过程"></p>
+<h2 id="数据表示"><a href="#数据表示" class="headerlink" title="数据表示"></a>数据表示</h2><p> FTP协议规范提供了控制文件传送与存储的多种选择。在以下四个方面中的每一个方面须作出一个选择。</p>
+<ol>
+<li>文件类型</li>
+<li>ASCII码文件类型（默认选择）文本文件已NVT ASCII码形式在数据连接中传输。这要求发方将本地文本文件转换成NVT ASCII码形式，而收方则将NVT ASCII码再还原成本地文件。其中用于NVT ASCII码传输的每行都带有一个回车，而后是一个换行。这意味着收方必须扫描每个字节，查找CR、LF对。</li>
+<li>EBCDIC文件类型，该文本类型传输方式要求两端都是EBCDIC系统</li>
+<li>图像文件类型（也称为二进制文件类型），数据发送呈现为一个连接的比特流。通常用于传输二进制文件。</li>
+<li>本地文件类型，该方式在具有不同字节大小的主机间传输二进制文件。每一字节的比特数由发方规定。对使用8bit字节的系统来说，本地文件以8bit字节传输就等同于图像文件传输。</li>
+<li>格式控制，该选项只对ASCII和EBCDIC文件类型有效</li>
+<li>非打印（默认选择），文件中不含有垂直格式信息</li>
+<li>远程登录格式控制，文件含有向打印机解释的远程登录垂直格式控制。</li>
+<li>Fortran回车控制，每行首字符是Fortran格式控制符。</li>
+<li>结构</li>
+<li>文件结构（默认选择），文件被认为是一个连续的字节流。不存在内部的文件结构</li>
+<li>记录结构，该结构只用于文本文件（ASCII或EBCDIC）</li>
+<li>页结构，每页都带有页号发送，以便收方能随机地存储各页。该结构由TOPS-20操作系统提供</li>
+<li>传输方式，主要规定文件在数据连接中如何传输。</li>
+<li>流方式（默认选择），文件以字节流的形式传输。对于文件结构，发方在文件尾提示关闭数据连接。对于记录结构，有专用的两字序列码标志记录结束和文件结束。</li>
+<li>块方式，文件以一系列块来传输，每块前面都带有一个或多个首部字节。</li>
+<li>压缩方式，一个简单的全长的编码压缩方法，压缩连续出现的相同字节。在文本文件中常用来压缩空白串。</li>
+</ol>
+<p>上述的内容，在实现简单的FTP服务器过程中，对于文件类型中用于NVT ASCII码传输的每行都带有一个回车和换行，即CR、LF对这一点比较深刻，本人在实现文件上传指令<code>STOR</code>时，服务器传输回客户端的开启binary模式的响应<code>150 open binary mode</code>时，遗漏了CR、LF对，导致服务端的socket读取不到客户端传输过来的二进制数据。</p>
+<h2 id="FTP主要命令"><a href="#FTP主要命令" class="headerlink" title="FTP主要命令"></a>FTP主要命令</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">指令</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">USER 用户名</td>
+<td style="text-align:left">输入用户名</td>
+</tr>
+<tr>
+<td style="text-align:left">PASS 密码</td>
+<td style="text-align:left">输入密码(PASSWORD)</td>
+</tr>
+<tr>
+<td style="text-align:left">CWD 目录名</td>
+<td style="text-align:left">修改工作目录</td>
+</tr>
+<tr>
+<td style="text-align:left">QUIT</td>
+<td style="text-align:left">正常结束</td>
+</tr>
+<tr>
+<td style="text-align:left">PORT h1,h2,h3,h4,p1,p2</td>
+<td style="text-align:left">指定数据传输时使用的IP地址和端口号</td>
+</tr>
+<tr>
+<td style="text-align:left">PASV</td>
+<td style="text-align:left">不是从服务端向客户端建立连接，而是由客户端开始向服务器建立数据传输用户的连接</td>
+</tr>
+<tr>
+<td style="text-align:left">TYPE 类型名</td>
+<td style="text-align:left">设置发送和接收的数据类型</td>
+</tr>
+<tr>
+<td style="text-align:left">STRU</td>
+<td style="text-align:left">指定文件结构</td>
+</tr>
+<tr>
+<td style="text-align:left">RETR 文件名</td>
+<td style="text-align:left">从FTP服务器下载文件</td>
+</tr>
+<tr>
+<td style="text-align:left">STOR 文件名</td>
+<td style="text-align:left">向服务器上传文件</td>
+</tr>
+<tr>
+<td style="text-align:left">STOU 文件名</td>
+<td style="text-align:left">向服务器发送问价。当存在同名文件时，为了避免冲突，适当地修改当前文件名后再上传</td>
+</tr>
+<tr>
+<td style="text-align:left">APPE 文件名</td>
+<td style="text-align:left">向服务器发送文件。当存在同名文件时，将当前文件内容追加到已有文件</td>
+</tr>
+<tr>
+<td style="text-align:left">RNFR 文件名</td>
+<td style="text-align:left">指定RNTO之前要修改名称的文件</td>
+</tr>
+<tr>
+<td style="text-align:left">RNTO 文件名</td>
+<td style="text-align:left">修改由RNFR指定文件的文件名</td>
+</tr>
+<tr>
+<td style="text-align:left">ABOR</td>
+<td style="text-align:left">处理中断，异常退出</td>
+</tr>
+<tr>
+<td style="text-align:left">DELE 文件名</td>
+<td style="text-align:left">从服务器上删除指定文件</td>
+</tr>
+<tr>
+<td style="text-align:left">RMD 目录名</td>
+<td style="text-align:left">删除目录</td>
+</tr>
+<tr>
+<td style="text-align:left">MKD</td>
+<td style="text-align:left">创建目录</td>
+</tr>
+<tr>
+<td style="text-align:left">PWD</td>
+<td style="text-align:left">列出当前目录位置</td>
+</tr>
+<tr>
+<td style="text-align:left">LIST</td>
+<td style="text-align:left">文件列表的请求（包括文件名、大小、更新日期等信息）</td>
+</tr>
+<tr>
+<td style="text-align:left">NLIST</td>
+<td style="text-align:left">文件名一览表请求</td>
+</tr>
+<tr>
+<td style="text-align:left">SITE 字符串</td>
+<td style="text-align:left">执行服务器提供的特殊命令</td>
+</tr>
+<tr>
+<td style="text-align:left">STAT</td>
+<td style="text-align:left">显示服务器FTP的状态</td>
+</tr>
+<tr>
+<td style="text-align:left">HELP</td>
+<td style="text-align:left">命令帮助</td>
+</tr>
+<tr>
+<td style="text-align:left">NOOP</td>
+<td style="text-align:left">无操作</td>
+</tr>
+</tbody>
+</table>
+<h2 id="响应信息"><a href="#响应信息" class="headerlink" title="响应信息"></a>响应信息</h2><table>
+<thead>
+<tr>
+<th style="text-align:left">响应状态</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">提供信息</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">120</td>
+<td style="text-align:left">Service ready is nnn min</td>
+</tr>
+<tr>
+<td style="text-align:left">125</td>
+<td style="text-align:left">Data connection already open;transfer starting</td>
+</tr>
+<tr>
+<td style="text-align:left">150</td>
+<td style="text-align:left">File status okay;about to open data connection</td>
+</tr>
+<tr>
+<td style="text-align:left">连接管理相关应答</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">200</td>
+<td style="text-align:left">Command okay</td>
+</tr>
+<tr>
+<td style="text-align:left">202</td>
+<td style="text-align:left">Command not implemented,superfluous at this site</td>
+</tr>
+<tr>
+<td style="text-align:left">211</td>
+<td style="text-align:left">System status,or system help reply</td>
+</tr>
+<tr>
+<td style="text-align:left">212</td>
+<td style="text-align:left">Directory status</td>
+</tr>
+<tr>
+<td style="text-align:left">213</td>
+<td style="text-align:left">File status</td>
+</tr>
+<tr>
+<td style="text-align:left">215</td>
+<td style="text-align:left">NAME system type.Where NAME is an official system name from the list in the Assigned Numbers document.</td>
+</tr>
+<tr>
+<td style="text-align:left">220</td>
+<td style="text-align:left">Service ready for new user</td>
+</tr>
+<tr>
+<td style="text-align:left">221</td>
+<td style="text-align:left">Service closing control connection.Logged out if appropriate</td>
+</tr>
+<tr>
+<td style="text-align:left">225</td>
+<td style="text-align:left">Data connection open;no transfer in progress</td>
+</tr>
+<tr>
+<td style="text-align:left">226</td>
+<td style="text-align:left">Closing data connection.Requested file action successful</td>
+</tr>
+<tr>
+<td style="text-align:left">227</td>
+<td style="text-align:left">Entering Passive Model(h1,h2,h3,h4,p1,p2)</td>
+</tr>
+<tr>
+<td style="text-align:left">230</td>
+<td style="text-align:left">User logged in.proceed</td>
+</tr>
+<tr>
+<td style="text-align:left">250</td>
+<td style="text-align:left">Requested file okay,completed</td>
+</tr>
+<tr>
+<td style="text-align:left">257</td>
+<td style="text-align:left">“PATHNAME” created</td>
+</tr>
+<tr>
+<td style="text-align:left">验证与用户相关应答</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">331</td>
+<td style="text-align:left">User name okay，need password</td>
+</tr>
+<tr>
+<td style="text-align:left">332</td>
+<td style="text-align:left">Need account for login</td>
+</tr>
+<tr>
+<td style="text-align:left">350</td>
+<td style="text-align:left">Requested file action pending further information</td>
+</tr>
+<tr>
+<td style="text-align:left">不固定的错误</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">421</td>
+<td style="text-align:left">Service not available,closing control connection.This may be a reply to any command if the service knows it must shut down</td>
+</tr>
+<tr>
+<td style="text-align:left">425</td>
+<td style="text-align:left">Can’t open data connectioni</td>
+</tr>
+<tr>
+<td style="text-align:left">426</td>
+<td style="text-align:left">Connection closed;transfer aborted</td>
+</tr>
+<tr>
+<td style="text-align:left">450</td>
+<td style="text-align:left">Requested file atction not taken.File unavailable</td>
+</tr>
+<tr>
+<td style="text-align:left">451</td>
+<td style="text-align:left">Requested action aborted:local error in processing</td>
+</tr>
+<tr>
+<td style="text-align:left">452</td>
+<td style="text-align:left">Requested action not taken.Insufficient storage space in system</td>
+</tr>
+<tr>
+<td style="text-align:left">文件系统相关应答</td>
+<td style="text-align:left"></td>
+</tr>
+<tr>
+<td style="text-align:left">500</td>
+<td style="text-align:left">Syntax error,command unrecognized</td>
+</tr>
+<tr>
+<td style="text-align:left">501</td>
+<td style="text-align:left">Syntax error in parameters or arguments</td>
+</tr>
+<tr>
+<td style="text-align:left">502</td>
+<td style="text-align:left">Command not implemented</td>
+</tr>
+<tr>
+<td style="text-align:left">503</td>
+<td style="text-align:left">Bad sequence fo commands</td>
+</tr>
+<tr>
+<td style="text-align:left">504</td>
+<td style="text-align:left">Command not implemented for that parameter</td>
+</tr>
+<tr>
+<td style="text-align:left">530</td>
+<td style="text-align:left">Not logged in</td>
+</tr>
+<tr>
+<td style="text-align:left">532</td>
+<td style="text-align:left">Need account for storing files</td>
+</tr>
+<tr>
+<td style="text-align:left">550</td>
+<td style="text-align:left">Requested action not taken.File unavailable</td>
+</tr>
+<tr>
+<td style="text-align:left">551</td>
+<td style="text-align:left">Requested action aborted:page type unknown</td>
+</tr>
+<tr>
+<td style="text-align:left">552</td>
+<td style="text-align:left">Requested file action aborted.Exceeded stroage allocation</td>
+</tr>
+<tr>
+<td style="text-align:left">553</td>
+<td style="text-align:left">Request action not taken.File name not allowed</td>
+</tr>
+</tbody>
+</table>
+<h1 id="实践过程"><a href="#实践过程" class="headerlink" title="实践过程"></a>实践过程</h1><p>用于测试的ftp客户端：windows自带的ftp客户端</p>
+<h2 id="实现的FTP命令"><a href="#实现的FTP命令" class="headerlink" title="实现的FTP命令"></a>实现的FTP命令</h2><p>目前的版本已基本实现了USER、PASS、PORT、QUIT、RETR、PWD（对应Windows的ftp客户端的XPWD）、CWD、STOR、QUIT、NLIST、LIST，后续将会继续开发完善给服务器。</p>
+<h2 id="实现思想"><a href="#实现思想" class="headerlink" title="实现思想"></a>实现思想</h2><ol>
+<li>创建容量固定的线程池对控制连接进行处理 </li>
+<li>使用ServerSocket进行监听，每个控制连接的请求到来之后，提交给线程池进行处理。</li>
+<li>对于命令使用工厂方法模式进行设计，当需要添加新的命令时，只需要添加一个命令类，修改工厂方法，其余模块不需要改动，可扩展性较好，符合开闭原则</li>
+</ol>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><ol>
+<li>实现<code>STOR</code>命令时，无法从Socket中获取客户端上传的文件，其原因是返回的状态码中遗漏了CR、LF对。</li>
+<li>实现首先需要PORT命令传输socket端口的命令时，如DIR，不知道客户端会默认地发送PORT命令传输Socket端口，以为是在客户端中自行传输Socket端口，后来通过Debug命令的执行过程发现客户端在发送DIR命令前，会先发送PORT命令。</li>
+<li>如何避免网络攻击，提高服务器的安全性，如DOS攻击等（该问题暂时没有解决）</li>
+</ol>
+<p><em>注：以上是本人在实现FTP服务器时的过程记录，欢迎有兴趣的同学评论或Email一起交流分享，Email地址：woodyoilovecn@gmail.com。</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/17/Java实现简单的FTP服务器/" data-id="cisikzro0000468orxclesbuy" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          Spring MVC的创建过程(SpringMVC源码阅读系列之一)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/17/SpringMVC源码阅读系列/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">SpringMVC源码阅读系列</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分類</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">歸檔</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 WoodyOilove<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="返回頂部"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  
+  <title>TCP建立连接3次握手即释放连接4次握手 | WoodyOilove&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="TCP建立连接及释放连接示意图注：假设左边运行TCP客户程序，右边运行TCP服务器程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TCP建立连接3次握手即释放连接4次握手">
+<meta property="og:url" content="http://yoursite.com/2016/08/10/TCP建立连接3次握手及释放连接4次握手/index.html">
+<meta property="og:site_name" content="WoodyOilove's Blog">
+<meta property="og:description" content="TCP建立连接及释放连接示意图注：假设左边运行TCP客户程序，右边运行TCP服务器程序">
+<meta property="og:image" content="http://yoursite.com/img/TCPlinkAndRelease.png">
+<meta property="og:updated_time" content="2016-08-31T07:45:49.533Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TCP建立连接3次握手即释放连接4次握手">
+<meta name="twitter:description" content="TCP建立连接及释放连接示意图注：假设左边运行TCP客户程序，右边运行TCP服务器程序">
+<meta name="twitter:image" content="http://yoursite.com/img/TCPlinkAndRelease.png">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/oilove"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">WoodyOilove&#39;s Blog</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara">H</li>
+        <li class="cara"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="100" width="100" viewBox="-50 -50 200 200">
+          <circle cx="50" cy="50" r="45" stroke-width="5" stroke="black" stroke-opacity="0.5" fill-opacity="0"></circle>
+          <rect x="47.5" y="27.5" width="5" height="25" rx="2.5" ry="2.5" fill="black" fill-opacity="0.5" transform="rotate(330 50 50)"></rect>
+          <rect x="48.5" y="16.5" width="3" height="35" rx="1.5" ry="1.5" fill="black" fill-opacity="0.5"></rect>
+        </svg></li>
+        <li class="cara">F</li>
+        <li class="cara">O</li>
+        <li class="cara">E</li>
+        <li class="cara">N</li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/">Home</a>
+      
+        <a class="main-nav-link" href="/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/about">About</a>
+      
+      <!--<a class="main-nav-link st-search-show-outputs">Search</a>-->
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-TCP建立连接3次握手及释放连接4次握手" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" class="article-date">
+  <time datetime="2016-08-09T16:00:00.000Z" itemprop="datePublished">2016-08-10</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/计算机网络/">计算机网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      TCP建立连接3次握手即释放连接4次握手
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+          <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目錄</strong>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#TCP建立连接及释放连接示意图"><span class="toc-text">TCP建立连接及释放连接示意图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#建立连接3次握手"><span class="toc-text">建立连接3次握手</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#建立连接要3次握手的原因"><span class="toc-text">建立连接要3次握手的原因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#释放连接4次握手"><span class="toc-text">释放连接4次握手</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#释放连接4次握手的原因"><span class="toc-text">释放连接4次握手的原因</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#TIME-WAIT必须等待2MSL时间的原因"><span class="toc-text">TIME-WAIT必须等待2MSL时间的原因</span></a></li></ol>
+          </div>
+        
+        <h1 id="TCP建立连接及释放连接示意图"><a href="#TCP建立连接及释放连接示意图" class="headerlink" title="TCP建立连接及释放连接示意图"></a>TCP建立连接及释放连接示意图</h1><p><img src="/img/TCPlinkAndRelease.png" alt="TCP连接与释放过程"><br><em>注：假设左边运行TCP客户程序，右边运行TCP服务器程序</em></p>
+<a id="more"></a>
+<h1 id="建立连接3次握手"><a href="#建立连接3次握手" class="headerlink" title="建立连接3次握手"></a>建立连接3次握手</h1><p>TCP建立连接过程需要经过3次握手，最初服务器B的TCP服务器进程先创建传输控制块TCB,准备接收客户进程的连接请求，然后服务器进程就处于LISTEN（收听）状态，等待客户的连接请求。</p>
+<ol>
+<li>第一个次握手：A的TCP客户进程首先创建传输控制模块TCB，<font color="#ff0000">向服务器B发送连接请求报文段，即SYN报文段，此时首部中的同步位SYN=1，同时选择一个初始序号seq=x，这时，TCP客户进程进入SYN-SENT（同步已发送）状态</font>（<em>注：SYN报文段不能携带数据，但会消耗一个序号</em>）。</li>
+<li>第二次握手：<font color="#ff0000">服务器B收到SYN报文段后，向A发送确认报文段，即SYN+ACK报文段，</font>在此报文段中，SYN和ACK位置1，确认号是ack=x+1，同时也为自己选择一个初始序号seq=y，这时，<font color="#ff0000">TCP服务器进程进入SYN-RCVD(同步收到)状态</font>（<em>注：此报文段不能携带数据，但要消耗一个序号</em>）。</li>
+<li>第三次握手：<font color="#ff0000">TCP客户进程收到服务器B的确认后，向服务器B发送确认报文段，即ACK报文段，</font>在此报文段中，ACK置1，确认号ack=y+1，序号seq=x+1，这时，<font color="#ff0000">TCP客户进程进入ESTABLISHED（已建立连接）状态</font>（<em>注：此报文段可以携带数据，如果不携带数据则不消耗序号</em>），当服务器B收到A的确认后，也进入ESTABLISHED状态，至此，TCP建立连接的三次握手结束。</li>
+</ol>
+<h1 id="建立连接要3次握手的原因"><a href="#建立连接要3次握手的原因" class="headerlink" title="建立连接要3次握手的原因"></a>建立连接要3次握手的原因</h1><p>主要是为了防止已过期的连接请求报文段再次传到连接的主机。怎么理解呢？正常情况下，A向B发出连接请求，但因连接请求报文丢失而未收到确认，于是A再重传一次连接请求，后来接收到了确认，建立了连接，数据传输完毕后，就释放了连接。假设A发出的第一个连接请求报文段并没有丢失，而是由于在某个网络结点长时间滞留了，以致延误到连接释放以后的某个时间才到达B，而这个请求报文段即为已过期的连接请求报文段。<br>如果是两次，会出现以下的情况：</p>
+<ol>
+<li>A发出的第一个连接请求报文段没有丢失，而是由于某个网络节点长时间滞留了，以致延误到连接请求释放以后的某个时间才到达B。B收到此失效的请求报文段后，误认为是A又发出一次新的连接请求，于是向A发出确认报文段，同意建立连接，新连接就建立了，而A由于没有发出建立连接的请求，因此不会理睬B的确认，也不会向B发送数据，但B却以为新的运输连接已经建立，并一直等待A发来数据。</li>
+<li>可能发生死锁。假定A给B发送一个连接请求分组，B收到了这个分组，并发送了确认应答分组。按照两次握手的协定，B认为连接已经成功地建立了，可以开始发送数据分组。可是，A在B的应答分组在传输中被丢失的情况下，将不知道B是否已准备好，不知道B建议什么样的序列号，A甚至怀疑B是否收到自己的连接请求分组。在这种情况下，A认为连接还未建立成功，将忽略B发来的任何数据分组，只等待连接确认应答分组。而B在发出的分组超时后，重复发送同样的分组。这样就形成了死锁。</li>
+</ol>
+<h1 id="释放连接4次握手"><a href="#释放连接4次握手" class="headerlink" title="释放连接4次握手"></a>释放连接4次握手</h1><ol>
+<li>第一次握手：<font color="#ff0000">A的应用程序先向其TCP发出连接释放报文段，并停止再发送数据，主动关闭TCP连接，向服务器B发送连接释放报文段，即FIN报文段，</font>在此报文段中，终止控制位置1，其序号seq=u，它等于传送过的数据的最后一个字节的序号加1，这时，<font color="#ff0000">A进入FIN-WAIT1（终止等待1）状态，等待B的确认</font>（<em>注：FIN报文段即使不携带数据，也要消耗一个序号</em>）。</li>
+<li>第二次握手：<font color="#ff0000">B收到连接释放报文段后，发出确认报文段，</font>在此报文段中，确认号为ack=u+1，序号为v，等于B前面传送过的数据的最后一个字节的序号加1，此时，<font color="#ff0000">B进入CLOSE-WAIT（关闭等待）状态，</font>同时TCP服务器进程通知高层应用服务器，从A到B这个方向的连接释放了，这时的TCP连接处于半关闭状态，即A已经没有数据要发送了，但B若发送数据，A仍要接收。</li>
+<li>第三次握手：<font color="#ff0000">A收到来自B的确认后，进入FIN-WAIT-2(终止等待2)状态，等待B发出的连接释放报文段，B若没有数据要向A发送时，其应用程序就通知TCP释放连接，向A发送连接释放报文段，即FIN-ACK报文段，</font>在此报文段中，FIN和ACK置1，序号为w(在半关闭状态B可能又发送了一些数据)，确认号ack=u+1，这时，<font color="#ff0000">B进入LAST-ACK（最后确认）状态，等待A的确认</font>。</li>
+<li>第四次握手：<font color="#ff0000">A收到B的连接释放报文段后，对此发出确认报文段，即FIN报文段，</font>在此报文段中，ACK置1，确认号ack=w+1，序号时seq=u+1（因为前面发送的FIN报文段需要消耗一个序号），此时，<font color="#ff0000">A进入TIME-WAIT（时间等待）状态</font>（<em>注：现在TCP连接还没有释放掉，必须经过时间等待计时器（TIME-WAIT）设置的时间2MSL后，A才进入到CLOSED状态，MSL叫做最长报文段寿命</em>）</li>
+</ol>
+<h1 id="释放连接4次握手的原因"><a href="#释放连接4次握手的原因" class="headerlink" title="释放连接4次握手的原因"></a>释放连接4次握手的原因</h1><p>因为TCP连接是全双工的，即数据可在两个方向上同时传递，所以进行关闭时每个方向上都要单独进行关闭，另一个对此进行确认；而关闭的方法是一方完成数据传输后，发送一个FIN报文段告知另一方将要终止这个方向的连接。发送FIN通常是应用层进行关闭的结果。</p>
+<h1 id="TIME-WAIT必须等待2MSL时间的原因"><a href="#TIME-WAIT必须等待2MSL时间的原因" class="headerlink" title="TIME-WAIT必须等待2MSL时间的原因"></a>TIME-WAIT必须等待2MSL时间的原因</h1><ol>
+<li>为了保证最后一个ACK报文段不会丢失，没有加入TIME-WAIT的话，如果最后一个ack报文段丢失了，server要求重传，但此时client已经关闭了，将会出现问题</li>
+<li>使得当前连接的所有报文段在网络中失效，不会影响到下一个连接。</li>
+</ol>
+<p><em>注：上述TCP建立连接和释放连接阶段，属于个人的学习理解，如存在疏漏，请留言或者邮件指明，也欢迎各位进行交流学习，邮箱地址：woodyoilovecn@gmail.com</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" data-id="cisikzro4000568orja034wk7" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/15/Tomcat源码阅读系列/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          Tomcat源码阅读系列
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">Tomcat源码分析环境搭建(Tomcat源码阅读系列之一)</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分類</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">歸檔</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 WoodyOilove<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="返回頂部"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>

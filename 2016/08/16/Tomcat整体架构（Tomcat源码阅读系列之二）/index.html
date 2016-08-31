@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  
+  <title>Tomcat整体架构(Tomcat源码阅读系列之二) | WoodyOilove&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：Tomcat源码分析环境搭建 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat整体架构(Tomcat源码阅读系列之二)">
+<meta property="og:url" content="http://yoursite.com/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/index.html">
+<meta property="og:site_name" content="WoodyOilove's Blog">
+<meta property="og:description" content="本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：Tomcat源码分析环境搭建 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。">
+<meta property="og:image" content="http://yoursite.com/img/TomcatWholeStructure.png">
+<meta property="og:image" content="http://yoursite.com/img/StandardServerHierarchy.png">
+<meta property="og:image" content="http://yoursite.com/img/StandardConnectorHierarchy.png">
+<meta property="og:image" content="http://yoursite.com/img/StandardEngineHierarchy.png">
+<meta property="og:image" content="http://yoursite.com/img/StandardHostHierarchy.png">
+<meta property="og:image" content="http://yoursite.com/img/StandardContextHierarchy.png">
+<meta property="og:updated_time" content="2016-08-31T10:16:57.581Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Tomcat整体架构(Tomcat源码阅读系列之二)">
+<meta name="twitter:description" content="本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：Tomcat源码分析环境搭建 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。">
+<meta name="twitter:image" content="http://yoursite.com/img/TomcatWholeStructure.png">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/oilove"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">WoodyOilove&#39;s Blog</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara">H</li>
+        <li class="cara"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="100" width="100" viewBox="-50 -50 200 200">
+          <circle cx="50" cy="50" r="45" stroke-width="5" stroke="black" stroke-opacity="0.5" fill-opacity="0"></circle>
+          <rect x="47.5" y="27.5" width="5" height="25" rx="2.5" ry="2.5" fill="black" fill-opacity="0.5" transform="rotate(330 50 50)"></rect>
+          <rect x="48.5" y="16.5" width="3" height="35" rx="1.5" ry="1.5" fill="black" fill-opacity="0.5"></rect>
+        </svg></li>
+        <li class="cara">F</li>
+        <li class="cara">O</li>
+        <li class="cara">E</li>
+        <li class="cara">N</li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/">Home</a>
+      
+        <a class="main-nav-link" href="/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/about">About</a>
+      
+      <!--<a class="main-nav-link st-search-show-outputs">Search</a>-->
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-Tomcat整体架构（Tomcat源码阅读系列之二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" class="article-date">
+  <time datetime="2016-08-15T16:00:00.000Z" itemprop="datePublished">2016-08-16</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Tomcat整体架构(Tomcat源码阅读系列之二)
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+          <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目錄</strong>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tomcat的总体架构"><span class="toc-text">Tomcat的总体架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Server分析"><span class="toc-text">Server分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Service分析"><span class="toc-text">Service分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Connector分析"><span class="toc-text">Connector分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Engine分析"><span class="toc-text">Engine分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Host分析"><span class="toc-text">Host分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Context分析"><span class="toc-text">Context分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Value"><span class="toc-text">Value</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Wrapper"><span class="toc-text">Wrapper</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li></ol>
+          </div>
+        
+        <p>本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：<a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/">Tomcat源码分析环境搭建</a> 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。</p>
+<a id="more"></a>
+<h1 id="Tomcat的总体架构"><a href="#Tomcat的总体架构" class="headerlink" title="Tomcat的总体架构"></a>Tomcat的总体架构</h1><p>Tomcat既是一个Http服务器也是一个Servlet容器，其总体架构如下：</p>
+<p><img src="/img/TomcatWholeStructure.png" alt="Tomcat总体架构"></p>
+<p>从上图我们可以看出Tomcat主要涉及的组件有：</p>
+<ul>
+<li>Server</li>
+<li>Service</li>
+<li>Connector</li>
+<li>Container</li>
+<li>Engine</li>
+<li>Host</li>
+<li>Context<br>相信查看或配置过<code>conf/server.xml</code>文件的同学都对以上的组件有种似曾相识的感觉，没错，<code>conf/server.xml</code>文件中就包含了以上组件的配置，或许细心的同学会问，那ProtocolHandler、Endpoint等这些是什么呢？它们不算是Tomcat的组件吗？它们是Connector组件的结构组件，也属于Tomcat的组件，只是它们用于实现Connector组件的，因而没有把它们都列为Tomcat的组件。conf/server.xml文件内容如下（省略了Tomcat默认注释的部分,详细的可自行打开server.xml文件进行查看）：<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version='1.0' encoding='utf-8'?&gt;</div><div class="line"><span class="tag">&lt;<span class="name">Server</span> <span class="attr">port</span>=<span class="string">"8005"</span> <span class="attr">shutdown</span>=<span class="string">"SHUTDOWN"</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.AprLifecycleListener"</span> <span class="attr">SSLEngine</span>=<span class="string">"on"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.JasperListener"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.JreMemoryLeakPreventionListener"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.mbeans.GlobalResourcesLifecycleListener"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Listener</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.core.ThreadLocalLeakPreventionListener"</span> /&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">GlobalNamingResources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Resource</span> <span class="attr">name</span>=<span class="string">"UserDatabase"</span> <span class="attr">auth</span>=<span class="string">"Container"</span></span></div><div class="line">              <span class="attr">type</span>=<span class="string">"org.apache.catalina.UserDatabase"</span></div><div class="line">              <span class="attr">description</span>=<span class="string">"User database that can be updated and saved"</span></div><div class="line">              <span class="attr">factory</span>=<span class="string">"org.apache.catalina.users.MemoryUserDatabaseFactory"</span></div><div class="line">              <span class="attr">pathname</span>=<span class="string">"conf/tomcat-users.xml"</span> /&gt;</div><div class="line">  <span class="tag">&lt;/<span class="name">GlobalNamingResources</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">Service</span> <span class="attr">name</span>=<span class="string">"Catalina"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8080"</span> <span class="attr">protocol</span>=<span class="string">"HTTP/1.1"</span></span></div><div class="line">               <span class="attr">connectionTimeout</span>=<span class="string">"20000"</span></div><div class="line">               <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</div><div class="line">    <span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">"8009"</span> <span class="attr">protocol</span>=<span class="string">"AJP/1.3"</span> <span class="attr">redirectPort</span>=<span class="string">"8443"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">Engine</span> <span class="attr">name</span>=<span class="string">"Catalina"</span> <span class="attr">defaultHost</span>=<span class="string">"localhost"</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">Realm</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.realm.LockOutRealm"</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">Realm</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.realm.UserDatabaseRealm"</span></span></div><div class="line">               <span class="attr">resourceName</span>=<span class="string">"UserDatabase"</span>/&gt;</div><div class="line">      <span class="tag">&lt;/<span class="name">Realm</span>&gt;</span></div><div class="line">      <span class="tag">&lt;<span class="name">Host</span> <span class="attr">name</span>=<span class="string">"localhost"</span>  <span class="attr">appBase</span>=<span class="string">"webapps"</span></span></div><div class="line">            <span class="attr">unpackWARs</span>=<span class="string">"true"</span> <span class="attr">autoDeploy</span>=<span class="string">"true"</span>&gt;</div><div class="line">        <span class="tag">&lt;<span class="name">Valve</span> <span class="attr">className</span>=<span class="string">"org.apache.catalina.valves.AccessLogValve"</span> <span class="attr">directory</span>=<span class="string">"logs"</span></span></div><div class="line">               <span class="attr">prefix</span>=<span class="string">"localhost_access_log."</span> <span class="attr">suffix</span>=<span class="string">".txt"</span></div><div class="line">               <span class="attr">pattern</span>=<span class="string">"%h %l %u %t &amp;quot;%r&amp;quot; %s %b"</span> /&gt;</div><div class="line">      <span class="tag">&lt;/<span class="name">Host</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">Engine</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="name">Service</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Server</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h1 id="Server分析"><a href="#Server分析" class="headerlink" title="Server分析"></a>Server分析</h1><p><font color="#ff0000">Server是Tomcat最顶层的容器，代表着整个服务器，即一个Tomcat只有一个Server，Server中包含至少一个Service组件，用于提供具体服务。</font>在Tomcat源码中Server组件对应源码中的<code>org.apache.catalina.core.StandardServer</code>类，其继承结构类图如下：<br><img src="/img/StandardServerHierarchy.png" alt="StandardServer继承结构类图"></p>
+<p>或许好问的同学会忍不住提问，StandardServer为什么要继承LifecycleMBeanBase类和实现Server接口呢？对于这两个问题我是这样理解的，<font color="#ff0000">在Tomcat中StandardServer实现Server接口，在使用时调用模块不直接依赖StandardServer，而是依赖于Server，体现依赖倒置（DIP）的设计原则，让模块间的依赖通过抽象实现，实现类之间不发生直接的依赖关系，而是通过接口来产生</font>；而继承LifecycleMBean类与Tomcat生命周期的管理方式有关，详情在以后的文章中进行说明。</p>
+<h1 id="Service分析"><a href="#Service分析" class="headerlink" title="Service分析"></a>Service分析</h1><p>接下来我们看Service组件，是Server层（对应Server组件）中的一个逻辑功能层，在<code>conf/server.xml</code>文件中，我们可以看到Service组件包含了Connector组件和Engine组件，即Service相当于Connector和Engine组件的包装器，将一个或者多个Connector和一个Engine建立关联关系。在默认的配置文件中，定义了一个叫<code>Catalina</code> 的服务，它将HTTP/1.1和AJP/1.3这两个Connector与一个名为<code>Catalina</code> 的Engine关联起来。</p>
+<h1 id="Connector分析"><a href="#Connector分析" class="headerlink" title="Connector分析"></a>Connector分析</h1><p>对于Connector组件，它主要是用于处理连接相关的事情，并提供Socket与request、response的转换；如Tomcat是http服务器，提供http服务，而我们知道Http应用协议最终需要TCP层协议进行包的传递，而对应Tomcat中则是通过Socket进行通信。<font color="#ff0000">一个Connector会监听一个独立的端口来处理来自客户端的请求。</font>下面我们对server.xml默认配置的两个Connector进行说明。</p>
+<ul>
+<li>HTTP/1.1，<code>&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot; connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;</code>，它监听端口<code>8080</code>,这个端口值我们可以根据实际情况进行修改，<code>connectionTimeout</code>定义了连接超时时间，单位是毫秒，<code>redirectPort</code> 定义了ssl的重定向接口，根据上述配置，Connector会将ssl请求转发到<code>8443</code>端口。</li>
+<li>AJP/1.3，<code>&lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt;</code>, AJP表示Apache Jserv Protocol，此连接器将处理Tomcat和Apache http服务器之间的交互，此连接器用于处理我们将Tomcat和Apache http服务器结合使用的情况，如在同一台物理Server上部署一个Apache http服务器和多台Tomcat服务器，通过Apache服务器来处理静态资源以及负载均衡时，针对不同的Tomcat实例需要AJP监听不同的端口。Connector对应源代码中的<code>org.apache.catalina.connector.Connector</code>，其继承结构如下：<br><img src="/img/StandardConnectorHierarchy.png" alt="Connector继承结构"></li>
+</ul>
+<h1 id="Engine分析"><a href="#Engine分析" class="headerlink" title="Engine分析"></a>Engine分析</h1><p>Engine，用于管理多个站点，<font color="#ff0000">一个Service最多只能有一个Engine，而一个Engine可以包含一个或者多个Host，即一个Tomcat实例可以配置多个虚拟主机</font>，默认的情况下 <code>conf/server.xml</code> 配置文件中<code>&lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;</code> 定义了一个名为Catalina的Engine，Engine对应Tomcat源码中的<code>org.apache.catalina.core.StandardEngine</code>，其继承结构关系图如下：<br><img src="/img/StandardEngineHierarchy.png" alt="StandardEngine继承结构图"></p>
+<h1 id="Host分析"><a href="#Host分析" class="headerlink" title="Host分析"></a>Host分析</h1><p>Host，代表一个站点，也可以叫虚拟主机，一个Host可以配置多个Context，在server.xml文件中的默认配置为<code>&lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot; unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;</code>, 其中<code>appBase=webapps</code>， 也就是<code>&lt;CATALINA_HOME&gt;\webapps</code>目录，<code>unpackingWARS=true</code> 属性指定在appBase指定的目录中的war包都自动的解压，<code>autoDeploy=true</code> 属性指定对加入到appBase目录的war包进行自动的部署。在Tomcat源代码中对应<code>org.apache.catalina.core.StandardHost</code>, 其继承结构关系如下图：<br><img src="/img/StandardHostHierarchy.png" alt="StandardHost继承结构关系"></p>
+<h1 id="Context分析"><a href="#Context分析" class="headerlink" title="Context分析"></a>Context分析</h1><p>Context，代表一个应用程序，对应平时开发的一套程序，或者一个WEB-INF目录以及下面的web.xml文件，换句话说每一个运行的webapp最终都是以Context的形式存在，每个Context都有一个根路径和请求路径；<font color="#ff0000">与Host的区别是Context代表一个应用，如，默认配置下webapps下的每个目录都是一个应用，其中ROOT目录中存放主应用，其他目录存放别的子应用，而整个webapps是一个站点。</font>Context对应源代码中的<code>org.apache.catalina.core.StandardContext</code>, 其继承结构如下：<br><img src="/img/StandardContextHierarchy.png" alt="StandardContext继承结构"></p>
+<p>在Tomcat中通常采用如下方式创建一个Context</p>
+<ol>
+<li>在<code>&lt;CATALINA_HOME&gt;\webapps</code> 目录中创建一个目录，此时将自动创建一个context，默认context的访问url为<code>http://host:port/dirname</code>，也可以通过在<code>ContextRoot\META-INF</code> 中创建一个context.xml文件，其中包含如下内容来指定应用的访问路径：<code>&lt;context path=&quot;/urlpath&quot;&gt;</code></li>
+<li>在server.xml文件中增加<code>context</code> 元素，如下：<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">  <span class="tag">&lt;<span class="name">Context</span> <span class="attr">path</span>=<span class="string">"/urlpath"</span> <span class="attr">docBase</span>=<span class="string">"/test/xxx"</span> <span class="attr">reloadable</span>=<span class="string">true</span>&gt;</span><span class="tag">&lt;/<span class="name">Context</span>&gt;</span></div><div class="line"> <span class="tag">&lt;/<span class="name">Host</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">Engine</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这样我们就可以通过<code>http://host:port/urlpath</code>访问上面配置的应用。</p>
+<h1 id="Value"><a href="#Value" class="headerlink" title="Value"></a>Value</h1><p>对于这个组件Tomcat整体架构图中并没有指出，是因为它是Container用于处理请求的，是Tomcat中责任链模式的实现，责任链模式是指在一个请求处理的过程中有多个处理者依次对请求进行处理，每个处理者负责自己相应的处理，处理完毕后将处理后的请求返回，再让下一个处理者继续处理。但是Tomcat的Value的管道模型和普通的责任链模式有点不同，主要有两点：</p>
+<ol>
+<li>每个Container容器，都有特定的Value，而且是在管道的最后一个执行，叫做BaseValue，是不可删除的</li>
+<li>在上层容器的管道的BaseValue中会调用下层容器的管道</li>
+</ol>
+<p>Tomcat 默认定义了一个名为org.apache.catalina.valves.AccessLogValve的Valve,这个Valve负责拦截每个请求，然后记录一条访问日志。</p>
+<h1 id="Wrapper"><a href="#Wrapper" class="headerlink" title="Wrapper"></a>Wrapper</h1><p>每个Wrapper封装着一个Servlet，其对应Tomcat源码中的<code>org.apache.catalina.core.StandardWrapper</code>，其继承结构类图与<code>StandardContext、StandardHost</code>类似，在此不再阐述。</p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>Server是Tomcat最顶层的容器，代表着整个服务器，一个Tomcat只有一个Server，Server中包含至少一个Service组件，而Service主要包含两部分：Connector和Container，Connector用于处理连接相关的事情，并提供Socket与Request和Response的转换，Container用于封装和管理Servlet，以及具体处理request请求。</p>
+<p><em>[注：以上为阅读Tomcat源码时所做的小结，可能存在错误的地方，如有发现，欢迎email或者留言指明交流，Email地址：woodyoilovecn@gmail.com]</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="http://yoursite.com/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" data-id="cisimdat300000worn9gxx5ko" class="article-share-link">分享到</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2016/08/17/SpringMVC源码阅读系列/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          SpringMVC源码阅读系列
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/08/15/Tomcat源码阅读系列/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">Tomcat源码阅读系列</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分類</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">歸檔</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 WoodyOilove<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="返回頂部"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>
