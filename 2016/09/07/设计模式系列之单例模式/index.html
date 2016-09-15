@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  
+  <title>设计模式系列之单例模式 | WoodyOilove&#39;s Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="web应用程序使用配置文件配置应用环境参数是很常见的现象，既然使用了配置文件，那么程序中必然存在读取配置文件的内容的功能模块，下面我们来实现以下简单的读取配置文件的内容，例子中使用properties格式配置文件，因为使用Java读取properties格式配置文件比较简单。
+1234567891011121314151617181920212223242526272829303132333435">
+<meta property="og:type" content="article">
+<meta property="og:title" content="设计模式系列之单例模式">
+<meta property="og:url" content="localhost:4000/2016/09/07/设计模式系列之单例模式/index.html">
+<meta property="og:site_name" content="WoodyOilove's Blog">
+<meta property="og:description" content="web应用程序使用配置文件配置应用环境参数是很常见的现象，既然使用了配置文件，那么程序中必然存在读取配置文件的内容的功能模块，下面我们来实现以下简单的读取配置文件的内容，例子中使用properties格式配置文件，因为使用Java读取properties格式配置文件比较简单。
+1234567891011121314151617181920212223242526272829303132333435">
+<meta property="og:image" content="localhost:4000/img/singletonPatternCurrencyClass.png">
+<meta property="og:updated_time" content="2016-09-07T12:36:33.220Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="设计模式系列之单例模式">
+<meta name="twitter:description" content="web应用程序使用配置文件配置应用环境参数是很常见的现象，既然使用了配置文件，那么程序中必然存在读取配置文件的内容的功能模块，下面我们来实现以下简单的读取配置文件的内容，例子中使用properties格式配置文件，因为使用Java读取properties格式配置文件比较简单。
+1234567891011121314151617181920212223242526272829303132333435">
+<meta name="twitter:image" content="localhost:4000/img/singletonPatternCurrencyClass.png">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+    <link href="//fonts.useso.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+  
+  
+
+</head>
+
+<body>
+<div id="container">
+  <div id="wrap">
+    <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <nav id="upper-nav" class="inner">
+      <a id="main-nav-toggle" class="nav-icon"></a>
+      <div class="sub-nav">
+        
+        
+          <a id="nav-github" class="nav-icon" href="https://github.com/oilove"></a>
+        
+      </div>
+    </nav>
+    <div id="header-title">
+      
+        <h1 id="blog-title-wrap">
+          <a href="/" id="blog-title">WoodyOilove&#39;s Blog</a>
+        </h1>
+      
+    </div>
+    <div id="contenedor">
+      <ul class="cube">
+        <li class="cara">H</li>
+        <li class="cara"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="100" width="100" viewBox="-50 -50 200 200">
+          <circle cx="50" cy="50" r="45" stroke-width="5" stroke="black" stroke-opacity="0.5" fill-opacity="0"></circle>
+          <rect x="47.5" y="27.5" width="5" height="25" rx="2.5" ry="2.5" fill="black" fill-opacity="0.5" transform="rotate(330 50 50)"></rect>
+          <rect x="48.5" y="16.5" width="3" height="35" rx="1.5" ry="1.5" fill="black" fill-opacity="0.5"></rect>
+        </svg></li>
+        <li class="cara">F</li>
+        <li class="cara">O</li>
+        <li class="cara">E</li>
+        <li class="cara">N</li>
+      </ul>
+    </div>
+    <nav id="main-nav">
+      
+        <a class="main-nav-link" href="/">Home</a>
+      
+        <a class="main-nav-link" href="/archives">Archives</a>
+      
+        <a class="main-nav-link" href="/about">About</a>
+      
+      <!--<a class="main-nav-link st-search-show-outputs">Search</a>-->
+    </nav>
+  </div>
+</header>
+
+    <div class="outer">
+      <section id="main"><article id="post-设计模式系列之单例模式" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/09/07/设计模式系列之单例模式/" class="article-date">
+  <time datetime="2016-09-06T16:00:00.000Z" itemprop="datePublished">2016-09-07</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      设计模式系列之单例模式
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+          <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#单例模式定义"><span class="toc-text">单例模式定义</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单例模式通用结构"><span class="toc-text">单例模式通用结构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单例模式示例代码"><span class="toc-text">单例模式示例代码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#懒汉式"><span class="toc-text">懒汉式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#饿汉式"><span class="toc-text">饿汉式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#双重检查锁"><span class="toc-text">双重检查锁</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Lazy-initialization-holder-class模式"><span class="toc-text">Lazy initialization holder class模式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ClassLoader机制线程安全"><span class="toc-text">ClassLoader机制线程安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#枚举和单例"><span class="toc-text">枚举和单例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单例模式优缺点"><span class="toc-text">单例模式优缺点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#单例模式范围"><span class="toc-text">单例模式范围</span></a></li></ol>
+          </div>
+        
+        <p>web应用程序使用配置文件配置应用环境参数是很常见的现象，既然使用了配置文件，那么程序中必然存在读取配置文件的内容的功能模块，下面我们来实现以下简单的读取配置文件的内容，例子中使用<code>properties</code>格式配置文件，因为使用Java读取<code>properties</code>格式配置文件比较简单。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</div><div class="line">	<span class="comment">//用于保存参数</span></div><div class="line">    <span class="keyword">private</span> String param1;</div><div class="line">    <span class="keyword">private</span> String param2;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getParam1</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> param1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParam1</span><span class="params">(String param1)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.param1 = param1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getParam2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> param2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParam2</span><span class="params">(String param2)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.param2 = param2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Config</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//读取配置文件</span></div><div class="line">        readConfig();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readConfig</span><span class="params">()</span> </span>&#123;</div><div class="line">        Properties p = <span class="keyword">new</span> Properties();</div><div class="line">        InputStream in = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            in = Config.class.getResourceAsStream(<span class="string">"Config.properties"</span>);</div><div class="line">            p.load(in);</div><div class="line"></div><div class="line">            <span class="keyword">this</span>.param1 = p.getProperty(<span class="string">"param1"</span>);</div><div class="line">            <span class="keyword">this</span>.param2 = p.getProperty(<span class="string">"param2"</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            System.out.println(<span class="string">"读取配置文件出错了，具体堆栈信息如下："</span>);</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                in.close();</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//模拟客户端进行测试</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Config config = <span class="keyword">new</span> Config();</div><div class="line">        String param1 = config.getParam1();</div><div class="line">        String param2 = config.getParam2();</div><div class="line">        System.out.println(<span class="string">"param1: "</span>+param1);</div><div class="line">        System.out.println(<span class="string">"param2: "</span>+param2);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><em>注：上述代码需要在Config相同的包内添加配置文件，名称为Config.properties，简单示例如下：</em></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">param1 = 1</div><div class="line">param2 = 2</div></pre></td></tr></table></figure>
+<p>运行结果如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">param1: 1</div><div class="line">param2: 2</div></pre></td></tr></table></figure>
+<p>上面的实现非常简单，但是这样的做法有没有存在什么问题呢？</p>
+<p>我们看看客户端使用这个类的地方，通过new一个Config实例来得到一个操作配置文件的对象，如果在系统运行中，有多个地方需要使用配置文件的内容时，这种方案就需要在多个地方都创建Config对象的实例，换句话说系统中存在多份相同的配置文件，若是配置文件比较大的话，这样就会严重浪费内存资源，这样的方案是不可取的。对于这种情况，显然我们需要在系统运行期间，只需要实例化这个类一次，即这个类只需要一个类实例，这种设想，需要我们下面即将提到的单例模式。</p>
+<a id="more"></a>
+<h1 id="单例模式定义"><a href="#单例模式定义" class="headerlink" title="单例模式定义"></a>单例模式定义</h1><p>根据GoF著的设计模式，单例模式的定义如下：</p>
+<blockquote>
+<p>Ensure a class has only one instance, and provide a global point of access to it.</p>
+</blockquote>
+<p>上面的中文解释是；保证一个类仅有一个实例，并提供一个访问它的全局访问点。相信初次接触或者接触设计模式不久的读者，看到这个定义会有点疑惑，public的属性或方法就能提供一个全局访问点，可是又该如何保证一个类仅有一个实例呢？首先我们要明白一个道理：要想控制一个类只被创建一个实例或指定次数的实例，首要的问题就是要把创建实例的权限收回来，让类自身来负责自己类实例的创建，然后由该类来提供外部访问该类实例的方法，这也是正是单例模式的实现方式。</p>
+<h1 id="单例模式通用结构"><a href="#单例模式通用结构" class="headerlink" title="单例模式通用结构"></a>单例模式通用结构</h1><p>接下来我们再来看看单例模式的通用结构，如下图：</p>
+<p><img src="/img/singletonPatternCurrencyClass.png" alt="单例模式通用结构"></p>
+<p>从上图我们可以知道：Singleton的结构为：一个私有静态的实例属性，一个私有的构造方法和一个静态公有的的访问方法，该类的作用是：负责创建Singleton类自己的唯一实例，并提供一个静态公有的getInstance方法，让外部访问这个类的唯一实例。</p>
+<h1 id="单例模式示例代码"><a href="#单例模式示例代码" class="headerlink" title="单例模式示例代码"></a>单例模式示例代码</h1><p>在Java中，单例模式的实现可以分为两种：一种称为懒汉式，一种称为饿汉模式，这两者的主要不同点是在具体创建对象实例的处理上，即getInstance方法实现的不同。懒汉式的实现方式体现了延迟加载的思想，如果没有做并发同步处理，是线程不安全的，而饿汉模式利用了Java中static的特性：</p>
+<blockquote>
+<ol>
+<li>static 变量在类加载时进行初始化</li>
+<li>多个实例的static变量会共享同一块内存区域</li>
+</ol>
+</blockquote>
+<p>这就意味着，在Java中，static变量只会被初始化一次，就是在类加载的时候，而且多个实例都会共享这个内存空间。下面我们来写出这两种方法的代码：</p>
+<h2 id="懒汉式"><a href="#懒汉式" class="headerlink" title="懒汉式"></a>懒汉式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">  <span class="comment">//2. 定义存储实例的属性</span></div><div class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance;</div><div class="line">  <span class="comment">//1.私有化构造方法，避免外部通过new创建实例</span></div><div class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">  <span class="comment">//3. 提供外部访问方法，加上static定义为类方法</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">//4. 判断存储实例的变量是否有值</span></div><div class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>) &#123; <span class="comment">//延迟加载思想的体现，这里稍作修改还可以体现缓存思想</span></div><div class="line">      <span class="comment">//4.1 如果没有则创建一个，并把值赋给存储类实例的变量</span></div><div class="line">      instance = <span class="keyword">new</span> Instance();</div><div class="line">    &#125;</div><div class="line">    <span class="comment">//4.2 如果有值，则直接使用</span></div><div class="line">    <span class="keyword">return</span> instance;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="饿汉式"><a href="#饿汉式" class="headerlink" title="饿汉式"></a>饿汉式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">  <span class="comment">//2. 定义静态变量存储类实例，直接创建类实例，只能创建一次</span></div><div class="line">  <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">  <span class="comment">//1. 私有化构造方法，可以在内部控制创建实例的数目</span></div><div class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">  <span class="comment">//3. 提供外部访问实例的方法</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> instance;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>上面已经说了饿汉式是线程安全的，而懒汉式线程不安全的，下面我们将来看看懒汉式线程安全的几种实现方式，最简单的是在外部访问实例方法上加上<code>synchronized</code>关键字，这种方式的缺点也是显然的；不管存不存在并发的情况，都需要加锁进行判断，而在Java中加锁是要消耗一定的性能的，因此这种方式会降低整个访问的速度。下面我们来看看更好的实现方式：双重检查锁。</p>
+<h2 id="双重检查锁"><a href="#双重检查锁" class="headerlink" title="双重检查锁"></a>双重检查锁</h2><p>使用双重检查锁的方式，就可以既实现线程安全，又能够使性能不受到很大的影响。我们先来看看什么是“双重检查锁”机制。</p>
+<p>双重检查锁机制，指的是：不是每次进入getInstance方法都需要同步，而是先不同步，进入方法后，先检查是否存在，如果不存在才进入同步块，这是第一重检查。进入同步块后，再次检查实例是否存在，如果不存在，就在同步的情况下创建一个实例，这是第二重检查。这样一来，就只需要同步一次，从而减少了多次在同步情况下进行判断所浪费的时间。</p>
+<p>示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">  <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">null</span>;</div><div class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="comment">//1. 先检查实例实例是否存在</span></div><div class="line">    <span class="keyword">if</span>(instance == <span class="keyword">null</span>) &#123;</div><div class="line">      <span class="comment">//2. 同步块，安全创建实例</span></div><div class="line">      <span class="keyword">synchronized</span>(Singleton.class) &#123;</div><div class="line">        <span class="comment">//3. 再次检查实例是否存在，如果不存在才创建实例</span></div><div class="line">        <span class="keyword">if</span>(instance == <span class="keyword">null</span>) &#123;</div><div class="line">          instance = <span class="keyword">new</span> Singleton();</div><div class="line">        &#125;</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> instance;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>细心的读者，看了上面的代码，或许会问为什么要使用volatile修饰instace属性，为什么在同步块内还要检查实例是否存在呢。</p>
+<p>首先我们来看看第一个问题，我们首先要明白一个变量的值是可以被本地线程缓存的（感兴趣可以去了解JMM方面的内容，即Java内存模型），而被volatile关键字修饰的变量的值，将不会被本地线程缓存，所有对该变量的读写都是直接操作共享内存，这就确保了多个线程能正确地处理该变量。</p>
+<p>接着我们再来看看第二个问题，首先我们先来分析没有第二次检查的情况：当instance为null时，两个线程可以并发进入if语句内部，然后其中一个线程获得锁，进入Synchronized块来初始化instance，而另一个线程则被阻塞了，当第一个线程退出Synchronized块是，唤醒等待的线程，等待的线程进入Synchronized块并创建一个新的对象，因为第二个线程进入Synchronized块时，没有检查instance是否为非null。因此需要在同步块，即Synchronized块中还要检查实例是否存在。</p>
+<blockquote>
+<p>注：双重检查加锁的机制只能用在Java5及以上的版本，或者采用了新的JSR-133内存模型规范，同时由于volatile关键字可能会屏蔽掉虚拟机中一些必要的代码优化，所以运行效率并不是很高，没有特别的需要，一般不用。</p>
+</blockquote>
+<p>既然上面提到了不建议使用双重检查锁机制来实现单例模式的线程安全，那么我们又该采用什么方式来确保线程安全呢？下面我们来看看在Java中更好的单例实现方式：Lazy initialization holder class模式</p>
+<h2 id="Lazy-initialization-holder-class模式"><a href="#Lazy-initialization-holder-class模式" class="headerlink" title="Lazy initialization holder class模式"></a>Lazy initialization holder class模式</h2><p>或许大家觉得这个名称不太好理解，笔者在此简单地称之为“静态内部类式”，这个模式综合使用了Java的类级内部类和多线程缺省同步锁的知识，巧妙地同时实现了延迟加载和线程安全。</p>
+<p>我们先来了解一下类级内部类相关的知识。</p>
+<ul>
+<li>类级内部类指的是，有static修饰的成员式内部类，如果没有static修饰的成员式内部类被称为对象级内部类。</li>
+<li>类级内部类相当于其外部类的static成分，它的对象与外部类对象间不存在依赖关系，因此可以直接创建。而对象级内部类的实例，是绑定在外部对象实例中的。</li>
+<li>类级内部类中，可以定义静态的方法。在静态方法中只能够引用外部类中的静态成员方法或者成员变量</li>
+<li>类级内部类相当于其外部类的成员，只有在第一次被使用时才会加载。</li>
+</ul>
+<p>再来看看多线程缺省同步锁的知识。</p>
+<p>大家都知道，在多线程开发中，为了解决并发问题，主要是通过Synchronized来加互斥锁进行同步控制，但在某些情况下，JVM已经隐含地为我们执行了同步，这些情况下就不需要自己再进行同步控制了，这些情况包括：</p>
+<ul>
+<li>有静态初始化器(在静态字段上或static{}块中的初始化器)初始化数据时</li>
+<li>访问final字段时</li>
+<li>在创建线程之前创建对象时</li>
+<li>线程可以看见它将要处理的对象时</li>
+</ul>
+<p>示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Singleton</span> </span>&#123;</div><div class="line">  <span class="comment">//类级的内部类</span></div><div class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">SingletonHolder</span> </span>&#123;</div><div class="line">    <span class="comment">//静态初始化器，由JVM来保证线程安全</span></div><div class="line">    <span class="keyword">private</span> <span class="keyword">static</span> Singleton instance = <span class="keyword">new</span> Singleton();</div><div class="line">  &#125;</div><div class="line">  <span class="function"><span class="keyword">private</span> <span class="title">Singleton</span><span class="params">()</span></span>&#123;&#125;</div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Singleton <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> SingletonHolder.instance;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这种情况下，当getInstance方法被第一次调用时，它是第一次读取SingetonHolder.instance，导致SingletonHolder类得到初始化，而这个类在装载并初始化时，会初始化它的静态域，从而创建Singleton的实例，由于是静态的域，因此只会在虚拟机装载类时初始化一次，并由虚拟机来保证它的线程安全性。那么虚拟机又是如何保证它的线程安全性的呢？这个问题可以用ClassLoader机制是线程安全来进行解释。</p>
+<h2 id="ClassLoader机制线程安全"><a href="#ClassLoader机制线程安全" class="headerlink" title="ClassLoader机制线程安全"></a>ClassLoader机制线程安全</h2><p>首先我们要知道Java的所有类，必须被装载JVM中才能运行，而这个装载工作是由JVM中的类加载器完成的。在类加载器加载类时，都是通过ClassLoader的loadClass()方法来加载class的，这个方法由Synchronized修饰，每个线程调用该方法时要先获得锁，才能执行该方法，因此是线程安全的。这个方法是按照以下的顺序查找类的：</p>
+<ol>
+<li>调用<code>findLoadedClass(String)</code> 方法检查该类是否被加载过，如果是，则不再进行加载，否则执行步骤2</li>
+<li>如果父加载器不为null，则父加载器调用<code>loadClass(String)</code> 方法，如果为空则执行步骤3</li>
+<li>使用内置的加载器调用<code>findClass(String)</code> 方法装载类</li>
+<li>如果按照上述的步骤成功找到对应的类，并且该方法接收到的<code>resolve</code>参数值为<code>true</code> ,则调用<code>resolveClass(class)</code> 方法来处理类。</li>
+</ol>
+<h2 id="枚举和单例"><a href="#枚举和单例" class="headerlink" title="枚举和单例"></a>枚举和单例</h2><p>有看过《Effective Java》的读者，应该知道，该书的作者提出了这样的说法:</p>
+<blockquote>
+<p>单元素的枚举类已经成为实现Singleton的最佳方法。</p>
+</blockquote>
+<p>这个观点怎么理解呢？关于枚举，我们先来了解一点相关的枚举知识：</p>
+<ul>
+<li>Java的枚举类实质上是功能齐全的类，因此可以有自己的属性和方法</li>
+<li>Java枚举类型的基本思想是通过公有的静态final域为每个枚举常量导出实例的类</li>
+<li>从某个角度讲，枚举是单例的泛型化，本质上是单元素的枚举。</li>
+</ul>
+<p>示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">enum</span> Singleton &#123;</div><div class="line">  uniqueInstance;</div><div class="line">  <span class="comment">//示意方法，单例可以有自己的操作</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">singletonOperation</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>使用枚举来实现单例控制会更加简洁，而且无偿地提供了序列化的机制，并由JVM从根本上提供保障，绝对防止多次实例化，时更简洁、高效、安全的的实现单例的方式。</p>
+<p>至此单例模式的Java实现已基本分析完毕，下面我们来看看单例模式的优缺点和范围。</p>
+<h1 id="单例模式优缺点"><a href="#单例模式优缺点" class="headerlink" title="单例模式优缺点"></a>单例模式优缺点</h1><p>单例模式一般具备以下的优点：</p>
+<ul>
+<li>由于单例模式在内存中只有一个实例，减少了内存开支，特别是一个对象需要频繁地创建、销毁，而且创建和销毁的性能又无法优化时，单例模式的优势就非常明显。</li>
+<li>减少系统性能开销，当一个对象的产生需要比较多的资源时，可以通过在应用启动时直接产生一个单例对象，然后用永久驻留内存的方式来解决（在JavaEE中采用单例模式时需要注意JVM的垃圾回收机制，以防被垃圾回收机制回收）</li>
+<li>避免对资源的多重占用</li>
+<li>可以在系统中设置全局访问点，优化和共享资源访问。</li>
+</ul>
+<p>其缺点如下：</p>
+<ul>
+<li>单例模式一般没有接口，扩展很困难，不增加接口的原因是接口对单例模式没有意义，单例模式要求“自行实例化”，并且提供单一实例，接口或抽象类是不可能被实例化的。</li>
+<li>单例模式对测试是不利的。在并行开发环境中，如果单例模式没有完成，是不能进行调试的，没有接口也不能使用mock的方式虚拟一个对象</li>
+</ul>
+<h1 id="单例模式范围"><a href="#单例模式范围" class="headerlink" title="单例模式范围"></a>单例模式范围</h1><p>从上面单例模式的实现可以知道，目前Java里实现的单例是一个虚拟机的范围。因为类的加载是虚拟机通过自己的ClassLoader来装载的。如果一个虚拟机里有多个ClassLoader，而且这些ClassLoader都装载这个类的话，就算这个类是单例的，也会产生很多个实例。</p>
+<p><em>注：参考资源：《研磨设计模式》</em></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="localhost:4000/2016/09/07/设计模式系列之单例模式/" data-id="cit3r5reg0004loorcjc41mng" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/09/07/设计模式系列之单例模式/#ds-thread" class="article-comment-link">评论</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2016/09/07/设计模式系列之学习设计模式之由/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="2016/09/07/设计模式系列之单例模式/" data-title="设计模式系列之单例模式" data-url="localhost:4000/2016/09/07/设计模式系列之单例模式/"></div>
+  </section>
+
+
+</section>
+      
+      <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">近期文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2016/09/07/设计模式系列之单例模式/">设计模式系列之单例模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/07/设计模式系列之学习设计模式之由/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/">Tomcat处理请求过程(Tomcat源码阅读系系列之四)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/">Tomcat的Session管理</a>
+          </li>
+        
+          <li>
+            <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+    </div>
+  </div>
+
+  
+</aside>
+      
+    </div>
+    <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2016 WoodyOilove<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+      .
+      Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
+    </div>
+    
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260393587'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260393587' type='text/javascript'%3E%3C/script%3E"));</script>
+
+  </div>
+</footer>
+  </div>
+  <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+    <a href="/about" class="mobile-nav-link">About</a>
+  
+  <a href="#search" class="mobile-nav-link st-search-show-outputs">Search</a>
+</nav>
+  
+
+<!-- totop start -->
+<div id="totop">
+	<a title="返回顶部"></a>
+</div>
+<!-- totop end -->
+
+<!-- swiftype search start -->
+
+<!-- swiftype search end -->
+
+
+<!-- duoshuo start -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"woodyoilove"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- duoshuo end -->
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/lrsjng.jquery-qrcode/0.12.0/jquery.qrcode.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+</div>
+</body>
+</html>

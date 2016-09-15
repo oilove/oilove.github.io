@@ -11,18 +11,18 @@
 前言从上一篇Spring MVC的创建过程 我们知道Spring的HttpServletBean继承于HttpServlet，熟悉Servlet编程的同学都知道我们">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Spring MVC处理请求过程(Spring MVC源码阅读系列之二)">
-<meta property="og:url" content="http://yoursite.com/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/index.html">
+<meta property="og:url" content="localhost:4000/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
 <meta property="og:description" content="本文是Spring MVC源码阅读系列的第二篇，在上一篇Spring MVC的创建过程中我们介绍了SpringMVC的创建过程，本文讲给主要介绍当一个请求到达时，SpringMVC都做了些什么，即Spring MVC是如何处理请求的。
 前言从上一篇Spring MVC的创建过程 我们知道Spring的HttpServletBean继承于HttpServlet，熟悉Servlet编程的同学都知道我们">
-<meta property="og:image" content="http://yoursite.com/img/SpringMVCRequest.png">
-<meta property="og:image" content="http://yoursite.com/img/doDispatcherProcess.png">
+<meta property="og:image" content="localhost:4000/img/SpringMVCRequest.png">
+<meta property="og:image" content="localhost:4000/img/doDispatcherProcess.png">
 <meta property="og:updated_time" content="2016-08-31T08:13:08.680Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Spring MVC处理请求过程(Spring MVC源码阅读系列之二)">
 <meta name="twitter:description" content="本文是Spring MVC源码阅读系列的第二篇，在上一篇Spring MVC的创建过程中我们介绍了SpringMVC的创建过程，本文讲给主要介绍当一个请求到达时，SpringMVC都做了些什么，即Spring MVC是如何处理请求的。
 前言从上一篇Spring MVC的创建过程 我们知道Spring的HttpServletBean继承于HttpServlet，熟悉Servlet编程的同学都知道我们">
-<meta name="twitter:image" content="http://yoursite.com/img/SpringMVCRequest.png">
+<meta name="twitter:image" content="localhost:4000/img/SpringMVCRequest.png">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -115,7 +115,7 @@
       
         
           <div id="toc" class="toc-article">
-            <strong class="toc-title">文章目錄</strong>
+            <strong class="toc-title">文章目录</strong>
             <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-MVC请求处理整体过程"><span class="toc-text">Spring MVC请求处理整体过程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Spring-MVC的请求处理概述"><span class="toc-text">Spring MVC的请求处理概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#FrameworkServlet"><span class="toc-text">FrameworkServlet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#DispatcherServlet"><span class="toc-text">DispatcherServlet</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#doDispatcher流程"><span class="toc-text">doDispatcher流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#参考资料"><span class="toc-text">参考资料</span></a></li></ol>
           </div>
         
@@ -197,7 +197,9 @@
     <footer class="article-footer">
       <div class="article-footer-content">
         
-        <a data-url="http://yoursite.com/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" data-id="cisiqoxqv0002skor6w8ehluk" class="article-share-link">分享到</a>
+        <a data-url="localhost:4000/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" data-id="cisjtmd3r0009o0oriksxat80" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/#ds-thread" class="article-comment-link">评论</a>
         
       </div>
     </footer>
@@ -229,6 +231,11 @@
 </article>
 
 
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" data-title="Spring MVC处理请求过程(Spring MVC源码阅读系列之二)" data-url="localhost:4000/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/"></div>
+  </section>
+
+
 </section>
       
       <aside id="sidebar">
@@ -240,23 +247,23 @@
       <ul>
         
           <li>
+            <a href="/2016/09/07/设计模式系列之单例模式/">设计模式系列之单例模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/07/设计模式系列之学习设计模式之由/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/">Tomcat处理请求过程(Tomcat源码阅读系系列之四)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/">Tomcat的Session管理</a>
+          </li>
+        
+          <li>
             <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
           </li>
         
       </ul>
@@ -266,18 +273,18 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">分類</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">歸檔</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
     </div>
   </div>
 
@@ -294,6 +301,9 @@
       .
       Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
     </div>
+    
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260393587'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260393587' type='text/javascript'%3E%3C/script%3E"));</script>
+
   </div>
 </footer>
   </div>
@@ -311,7 +321,7 @@
 
 <!-- totop start -->
 <div id="totop">
-	<a title="返回頂部"></a>
+	<a title="返回顶部"></a>
 </div>
 <!-- totop end -->
 
@@ -319,6 +329,20 @@
 
 <!-- swiftype search end -->
 
+
+<!-- duoshuo start -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"woodyoilove"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- duoshuo end -->
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

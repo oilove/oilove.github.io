@@ -5,30 +5,17 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   
-  <title>Tomcat源码阅读系列 | WoodyOilove&#39;s Blog</title>
+  <title>WoodyOilove&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="再过十来天，就要不再是大三，而步入大四的殿堂了，求职面试的事会接踵而至，鉴于春招时的教训，自己的学习比较缺乏系统性地整理，向他人交流自己所掌握的技术能力仍有待提高，为此将自己阅读Tomcat源码的过程记录一下，并分享到博客中，让有同样兴趣的同学一起交流讨论。
-
-注：如没有特别说明的地方，Tomcat的版本是7.0.42
-
-本系列涉及的主要内容有：Tomcat源码分析环境搭建(Tomcat源码阅读系">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Tomcat源码阅读系列">
-<meta property="og:url" content="localhost:4000/2016/08/15/Tomcat源码阅读系列/index.html">
+  <meta name="description" content="Record little growth and share littel growth">
+<meta property="og:type" content="website">
+<meta property="og:title" content="WoodyOilove's Blog">
+<meta property="og:url" content="localhost:4000/page/2/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
-<meta property="og:description" content="再过十来天，就要不再是大三，而步入大四的殿堂了，求职面试的事会接踵而至，鉴于春招时的教训，自己的学习比较缺乏系统性地整理，向他人交流自己所掌握的技术能力仍有待提高，为此将自己阅读Tomcat源码的过程记录一下，并分享到博客中，让有同样兴趣的同学一起交流讨论。
-
-注：如没有特别说明的地方，Tomcat的版本是7.0.42
-
-本系列涉及的主要内容有：Tomcat源码分析环境搭建(Tomcat源码阅读系">
-<meta property="og:updated_time" content="2016-08-31T10:13:19.932Z">
+<meta property="og:description" content="Record little growth and share littel growth">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Tomcat源码阅读系列">
-<meta name="twitter:description" content="再过十来天，就要不再是大三，而步入大四的殿堂了，求职面试的事会接踵而至，鉴于春招时的教训，自己的学习比较缺乏系统性地整理，向他人交流自己所掌握的技术能力仍有待提高，为此将自己阅读Tomcat源码的过程记录一下，并分享到博客中，让有同样兴趣的同学一起交流讨论。
-
-注：如没有特别说明的地方，Tomcat的版本是7.0.42
-
-本系列涉及的主要内容有：Tomcat源码分析环境搭建(Tomcat源码阅读系">
+<meta name="twitter:title" content="WoodyOilove's Blog">
+<meta name="twitter:description" content="Record little growth and share littel growth">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -91,7 +78,63 @@
 </header>
 
     <div class="outer">
-      <section id="main"><article id="post-Tomcat源码阅读系列" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main">
+  
+    <article id="post-Tomcat整体架构（Tomcat源码阅读系列之二）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" class="article-date">
+  <time datetime="2016-08-15T16:00:00.000Z" itemprop="datePublished">2016-08-16</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/">Tomcat整体架构(Tomcat源码阅读系列之二)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：<a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/">Tomcat源码分析环境搭建</a> 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="localhost:4000/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" data-id="cisjtmd2r0000o0orfmqoxrku" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/#ds-thread" class="article-comment-link">评论</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Tomcat源码阅读系列" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <h3 href="/2016/08/15/Tomcat源码阅读系列/" class="article-date">
   <time datetime="2016-08-14T16:00:00.000Z" itemprop="datePublished">2016-08-15</time>
@@ -110,8 +153,8 @@
       <header class="article-header">
         
   
-    <h1 class="article-title" itemprop="name">
-      Tomcat源码阅读系列
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/15/Tomcat源码阅读系列/">Tomcat源码阅读系列</a>
     </h1>
   
 
@@ -141,35 +184,124 @@
   </div>
   </div>
   
-    
-<nav id="article-nav">
+</article>
+
+
+
   
-    <a href="/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">下一篇</strong>
-      <div class="article-nav-title">
+    <article id="post-TCP建立连接3次握手及释放连接4次握手" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" class="article-date">
+  <time datetime="2016-08-09T16:00:00.000Z" itemprop="datePublished">2016-08-10</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/计算机网络/">计算机网络</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
         
-          Tomcat整体架构(Tomcat源码阅读系列之二)
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/">TCP建立连接3次握手即释放连接4次握手</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="TCP建立连接及释放连接示意图"><a href="#TCP建立连接及释放连接示意图" class="headerlink" title="TCP建立连接及释放连接示意图"></a>TCP建立连接及释放连接示意图</h1><p><img src="/img/TCPlinkAndRelease.png" alt="TCP连接与释放过程"><br><em>注：假设左边运行TCP客户程序，右边运行TCP服务器程序</em></p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="localhost:4000/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" data-id="cisjtmd3l0007o0oro6q8d0wz" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/08/10/TCP建立连接3次握手及释放连接4次握手/#ds-thread" class="article-comment-link">评论</a>
         
       </div>
-    </a>
-  
-  
-    <a href="/2016/08/10/TCP建立连接3次握手及释放连接4次握手/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">上一篇</strong>
-      <div class="article-nav-title">TCP建立连接3次握手即释放连接4次握手</div>
-    </a>
-  
-</nav>
-
+    </footer>
+  </div>
+  </div>
+  </div>
   
 </article>
 
 
-  <section id="comments">
-    <div id="ds-thread" class="ds-thread" data-thread-key="2016/08/15/Tomcat源码阅读系列/" data-title="Tomcat源码阅读系列" data-url="localhost:4000/2016/08/15/Tomcat源码阅读系列/"></div>
-  </section>
+
+  
+    <article id="post-Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/" class="article-date">
+  <time datetime="2016-08-08T16:00:00.000Z" itemprop="datePublished">2016-08-09</time>
+</h3>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/">Tomcat源码分析环境搭建(Tomcat源码阅读系列之一)</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Tomcat是个不过的Http服务器，其源码是比较值得我们学习的。但是搭建Tomcat源码分析环境时，会存在各种各样的问题，我们在搭建Tomcat源码分析环境的花了比较多的时间在配置上，为了方便他人搭建Tomcat源码分析环境，少走我曾走过的弯路，现写篇关于Tomcat源码分析环境搭建的配置过程。其实Tomcat的官网也给出了<a href="http://tomcat.apache.org/tomcat-7.0-doc/building.html">Building Tomcat</a>的步骤，本人在配置环境的过程中也是主要参考该文档。</p>
+        
+          <p class="article-more-link">
+            <a href="/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="localhost:4000/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/" data-id="cisjtmd3g0005o0orurdapjlj" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/08/09/Tomcat源码分析环境搭建（Tomcat源码阅读系列之一）/#ds-thread" class="article-comment-link">评论</a>
+        
+      </div>
+    </footer>
+  </div>
+  </div>
+  </div>
+  
+</article>
 
 
+
+  
+  
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
+  
 </section>
       
       <aside id="sidebar">

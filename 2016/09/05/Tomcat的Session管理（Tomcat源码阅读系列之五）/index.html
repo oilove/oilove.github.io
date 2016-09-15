@@ -5,17 +5,20 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   
-  <title>Category: Java框架 | WoodyOilove&#39;s Blog</title>
+  <title>Tomcat的Session管理 | WoodyOilove&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Record little growth and share littel growth">
-<meta property="og:type" content="website">
-<meta property="og:title" content="WoodyOilove's Blog">
-<meta property="og:url" content="localhost:4000/categories/Java框架/index.html">
+  <meta name="description" content="前面几篇我们分析Tomcat的整体架构、生命周期、Tomcat请求处理过程，本篇文章我们将来分析一下Tomcat的Session的创建和销毁过程。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat的Session管理">
+<meta property="og:url" content="localhost:4000/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
-<meta property="og:description" content="Record little growth and share littel growth">
+<meta property="og:description" content="前面几篇我们分析Tomcat的整体架构、生命周期、Tomcat请求处理过程，本篇文章我们将来分析一下Tomcat的Session的创建和销毁过程。">
+<meta property="og:image" content="localhost:4000/img/SessionManagerClass.png">
+<meta property="og:updated_time" content="2016-09-06T03:52:27.156Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WoodyOilove's Blog">
-<meta name="twitter:description" content="Record little growth and share littel growth">
+<meta name="twitter:title" content="Tomcat的Session管理">
+<meta name="twitter:description" content="前面几篇我们分析Tomcat的整体架构、生命周期、Tomcat请求处理过程，本篇文章我们将来分析一下Tomcat的Session的创建和销毁过程。">
+<meta name="twitter:image" content="localhost:4000/img/SessionManagerClass.png">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -78,97 +81,90 @@
 </header>
 
     <div class="outer">
-      <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <h3 href="/2016/08/24/IOC容器和Dependency Injection模式/" class="archive-article-date">
-  <time datetime="2016-08-23T16:00:00.000Z" itemprop="datePublished">Aug 24</time>
+      <section id="main"><article id="post-Tomcat的Session管理（Tomcat源码阅读系列之五）" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <h3 href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/" class="article-date">
+  <time datetime="2016-09-04T16:00:00.000Z" itemprop="datePublished">2016-09-05</time>
 </h3>
-      
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+  <div class="curve-down">
+  <div class="fill-content">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
+    <h1 class="article-title" itemprop="name">
+      Tomcat的Session管理
     </h1>
   
 
-    </header>
-  </div>
-</article>
-  
+      </header>
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <h3 href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" class="archive-article-date">
-  <time datetime="2016-08-22T16:00:00.000Z" itemprop="datePublished">Aug 23</time>
-</h3>
+    <div class="article-entry" itemprop="articleBody">
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
-    </h1>
-  
+        
+          <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            
+          </div>
+        
+        <p>前面几篇我们分析Tomcat的整体架构、生命周期、Tomcat请求处理过程，本篇文章我们将来分析一下Tomcat的Session的创建和销毁过程。</p>
+<a id="more"></a>
+<p>在进行分析Session之前，我们先来看看Session管理相关的类图</p>
+<p><img src="/img/SessionManagerClass.png" alt="SessionManagerClass"></p>
+<p>从上面的类图我们可以知道ContainerBase与Manager相关联，而ManagerBase与Session相关联，因此我们推测Manager是Session的管理器，而容器通过Manger管理器对Session进行管理。</p>
 
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <h3 href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/" class="archive-article-date">
-  <time datetime="2016-08-17T16:00:00.000Z" itemprop="datePublished">Aug 18</time>
-</h3>
       
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
-    </h1>
-  
-
-    </header>
+    </div>
+    <footer class="article-footer">
+      <div class="article-footer-content">
+        
+        <a data-url="localhost:4000/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/" data-id="cit3r5red0003loorika19meu" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/#ds-thread" class="article-comment-link">评论</a>
+        
+      </div>
+    </footer>
   </div>
-</article>
+  </div>
+  </div>
   
     
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <h3 href="/2016/08/17/SpringMVC源码阅读系列/" class="archive-article-date">
-  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">Aug 17</time>
-</h3>
-      
+<nav id="article-nav">
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2016/08/17/SpringMVC源码阅读系列/">SpringMVC源码阅读系列</a>
-    </h1>
+    <a href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
+        
+          Tomcat处理请求过程(Tomcat源码阅读系系列之四)
+        
+      </div>
+    </a>
   
+  
+    <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</div>
+    </a>
+  
+</nav>
 
-    </header>
-  </div>
+  
 </article>
-  
-  
-    </div></section>
-  
-  
+
+
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/" data-title="Tomcat的Session管理" data-url="localhost:4000/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/"></div>
+  </section>
+
+
 </section>
       
       <aside id="sidebar">

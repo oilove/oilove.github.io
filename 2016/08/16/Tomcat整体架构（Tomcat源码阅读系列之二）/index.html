@@ -10,20 +10,20 @@
   <meta name="description" content="本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：Tomcat源码分析环境搭建 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Tomcat整体架构(Tomcat源码阅读系列之二)">
-<meta property="og:url" content="http://yoursite.com/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/index.html">
+<meta property="og:url" content="localhost:4000/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
 <meta property="og:description" content="本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：Tomcat源码分析环境搭建 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。">
-<meta property="og:image" content="http://yoursite.com/img/TomcatWholeStructure.png">
-<meta property="og:image" content="http://yoursite.com/img/StandardServerHierarchy.png">
-<meta property="og:image" content="http://yoursite.com/img/StandardConnectorHierarchy.png">
-<meta property="og:image" content="http://yoursite.com/img/StandardEngineHierarchy.png">
-<meta property="og:image" content="http://yoursite.com/img/StandardHostHierarchy.png">
-<meta property="og:image" content="http://yoursite.com/img/StandardContextHierarchy.png">
-<meta property="og:updated_time" content="2016-08-31T10:16:57.581Z">
+<meta property="og:image" content="localhost:4000/img/TomcatWholeStructure.png">
+<meta property="og:image" content="localhost:4000/img/StandardServerHierarchy.png">
+<meta property="og:image" content="localhost:4000/img/ConnectorHierarchy.png">
+<meta property="og:image" content="localhost:4000/img/StandardEngineHierarchy.png">
+<meta property="og:image" content="localhost:4000/img/StandardHostHierarchy.png">
+<meta property="og:image" content="localhost:4000/img/StandardContextHierarchy.png">
+<meta property="og:updated_time" content="2016-08-31T11:56:50.784Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Tomcat整体架构(Tomcat源码阅读系列之二)">
 <meta name="twitter:description" content="本文章是Tomcat源代码阅读系列的第二篇文章，我们在本系列的第一篇文章：Tomcat源码分析环境搭建 一文中介绍了如何在Eclipse中运行Tomcat源代码，本文将介绍一下Tomcat的总体架构体系。">
-<meta name="twitter:image" content="http://yoursite.com/img/TomcatWholeStructure.png">
+<meta name="twitter:image" content="localhost:4000/img/TomcatWholeStructure.png">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -116,7 +116,7 @@
       
         
           <div id="toc" class="toc-article">
-            <strong class="toc-title">文章目錄</strong>
+            <strong class="toc-title">文章目录</strong>
             <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Tomcat的总体架构"><span class="toc-text">Tomcat的总体架构</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Server分析"><span class="toc-text">Server分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Service分析"><span class="toc-text">Service分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Connector分析"><span class="toc-text">Connector分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Engine分析"><span class="toc-text">Engine分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Host分析"><span class="toc-text">Host分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Context分析"><span class="toc-text">Context分析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Value"><span class="toc-text">Value</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Wrapper"><span class="toc-text">Wrapper</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li></ol>
           </div>
         
@@ -141,7 +141,7 @@
 <h1 id="Connector分析"><a href="#Connector分析" class="headerlink" title="Connector分析"></a>Connector分析</h1><p>对于Connector组件，它主要是用于处理连接相关的事情，并提供Socket与request、response的转换；如Tomcat是http服务器，提供http服务，而我们知道Http应用协议最终需要TCP层协议进行包的传递，而对应Tomcat中则是通过Socket进行通信。<font color="#ff0000">一个Connector会监听一个独立的端口来处理来自客户端的请求。</font>下面我们对server.xml默认配置的两个Connector进行说明。</p>
 <ul>
 <li>HTTP/1.1，<code>&lt;Connector port=&quot;8080&quot; protocol=&quot;HTTP/1.1&quot; connectionTimeout=&quot;20000&quot; redirectPort=&quot;8443&quot; /&gt;</code>，它监听端口<code>8080</code>,这个端口值我们可以根据实际情况进行修改，<code>connectionTimeout</code>定义了连接超时时间，单位是毫秒，<code>redirectPort</code> 定义了ssl的重定向接口，根据上述配置，Connector会将ssl请求转发到<code>8443</code>端口。</li>
-<li>AJP/1.3，<code>&lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt;</code>, AJP表示Apache Jserv Protocol，此连接器将处理Tomcat和Apache http服务器之间的交互，此连接器用于处理我们将Tomcat和Apache http服务器结合使用的情况，如在同一台物理Server上部署一个Apache http服务器和多台Tomcat服务器，通过Apache服务器来处理静态资源以及负载均衡时，针对不同的Tomcat实例需要AJP监听不同的端口。Connector对应源代码中的<code>org.apache.catalina.connector.Connector</code>，其继承结构如下：<br><img src="/img/StandardConnectorHierarchy.png" alt="Connector继承结构"></li>
+<li>AJP/1.3，<code>&lt;Connector port=&quot;8009&quot; protocol=&quot;AJP/1.3&quot; redirectPort=&quot;8443&quot; /&gt;</code>, AJP表示Apache Jserv Protocol，此连接器将处理Tomcat和Apache http服务器之间的交互，此连接器用于处理我们将Tomcat和Apache http服务器结合使用的情况，如在同一台物理Server上部署一个Apache http服务器和多台Tomcat服务器，通过Apache服务器来处理静态资源以及负载均衡时，针对不同的Tomcat实例需要AJP监听不同的端口。Connector对应源代码中的<code>org.apache.catalina.connector.Connector</code>，其继承结构如下：<br><img src="/img/ConnectorHierarchy.png" alt="Connector继承结构"></li>
 </ul>
 <h1 id="Engine分析"><a href="#Engine分析" class="headerlink" title="Engine分析"></a>Engine分析</h1><p>Engine，用于管理多个站点，<font color="#ff0000">一个Service最多只能有一个Engine，而一个Engine可以包含一个或者多个Host，即一个Tomcat实例可以配置多个虚拟主机</font>，默认的情况下 <code>conf/server.xml</code> 配置文件中<code>&lt;Engine name=&quot;Catalina&quot; defaultHost=&quot;localhost&quot;&gt;</code> 定义了一个名为Catalina的Engine，Engine对应Tomcat源码中的<code>org.apache.catalina.core.StandardEngine</code>，其继承结构关系图如下：<br><img src="/img/StandardEngineHierarchy.png" alt="StandardEngine继承结构图"></p>
 <h1 id="Host分析"><a href="#Host分析" class="headerlink" title="Host分析"></a>Host分析</h1><p>Host，代表一个站点，也可以叫虚拟主机，一个Host可以配置多个Context，在server.xml文件中的默认配置为<code>&lt;Host name=&quot;localhost&quot;  appBase=&quot;webapps&quot; unpackWARs=&quot;true&quot; autoDeploy=&quot;true&quot;&gt;</code>, 其中<code>appBase=webapps</code>， 也就是<code>&lt;CATALINA_HOME&gt;\webapps</code>目录，<code>unpackingWARS=true</code> 属性指定在appBase指定的目录中的war包都自动的解压，<code>autoDeploy=true</code> 属性指定对加入到appBase目录的war包进行自动的部署。在Tomcat源代码中对应<code>org.apache.catalina.core.StandardHost</code>, 其继承结构关系如下图：<br><img src="/img/StandardHostHierarchy.png" alt="StandardHost继承结构关系"></p>
@@ -168,7 +168,9 @@
     <footer class="article-footer">
       <div class="article-footer-content">
         
-        <a data-url="http://yoursite.com/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" data-id="cisimdat300000worn9gxx5ko" class="article-share-link">分享到</a>
+        <a data-url="localhost:4000/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" data-id="cisjtmd2r0000o0orfmqoxrku" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/#ds-thread" class="article-comment-link">评论</a>
         
       </div>
     </footer>
@@ -200,6 +202,11 @@
 </article>
 
 
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/" data-title="Tomcat整体架构(Tomcat源码阅读系列之二)" data-url="localhost:4000/2016/08/16/Tomcat整体架构（Tomcat源码阅读系列之二）/"></div>
+  </section>
+
+
 </section>
       
       <aside id="sidebar">
@@ -211,23 +218,23 @@
       <ul>
         
           <li>
+            <a href="/2016/09/07/设计模式系列之单例模式/">设计模式系列之单例模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/07/设计模式系列之学习设计模式之由/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/">Tomcat处理请求过程(Tomcat源码阅读系系列之四)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/">Tomcat的Session管理</a>
+          </li>
+        
+          <li>
             <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
           </li>
         
       </ul>
@@ -237,18 +244,18 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">分類</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">歸檔</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
     </div>
   </div>
 
@@ -265,6 +272,9 @@
       .
       Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
     </div>
+    
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260393587'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260393587' type='text/javascript'%3E%3C/script%3E"));</script>
+
   </div>
 </footer>
   </div>
@@ -282,7 +292,7 @@
 
 <!-- totop start -->
 <div id="totop">
-	<a title="返回頂部"></a>
+	<a title="返回顶部"></a>
 </div>
 <!-- totop end -->
 
@@ -290,6 +300,20 @@
 
 <!-- swiftype search end -->
 
+
+<!-- duoshuo start -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"woodyoilove"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- duoshuo end -->
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

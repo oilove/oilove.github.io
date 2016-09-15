@@ -10,7 +10,7 @@
   <meta name="description" content="In the Java community there’s been a rush of lightweight containers that help to assemble components from different projects into a cohesive application. Underlying these containers is a common patter">
 <meta property="og:type" content="article">
 <meta property="og:title" content="IOC容器和Dependency Injection模式">
-<meta property="og:url" content="http://yoursite.com/2016/08/24/IOC容器和Dependency Injection模式/index.html">
+<meta property="og:url" content="localhost:4000/2016/08/24/IOC容器和Dependency Injection模式/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
 <meta property="og:description" content="In the Java community there’s been a rush of lightweight containers that help to assemble components from different projects into a cohesive application. Underlying these containers is a common patter">
 <meta property="og:image" content="http://img.blog.csdn.net/20160824114104958">
@@ -113,7 +113,7 @@
       
         
           <div id="toc" class="toc-article">
-            <strong class="toc-title">文章目錄</strong>
+            <strong class="toc-title">文章目录</strong>
             <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Components-and-Services"><span class="toc-text">Components and Services</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#A-Naive-Example"><span class="toc-text">A Naive Example</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Inversion-of-Control"><span class="toc-text">Inversion of Control</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Forms-of-Dependency-Injection"><span class="toc-text">Forms of Dependency Injection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Constructor-Injection-with-PicoContainer"><span class="toc-text">Constructor Injection with PicoContainer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Setter-Injection-with-Spring"><span class="toc-text">Setter Injection with Spring</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Interface-Injection"><span class="toc-text">Interface Injection</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Using-a-Service-Locator"><span class="toc-text">Using a Service Locator</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-a-Segregated-Interface-for-the-Locator"><span class="toc-text">Using a Segregated Interface for the Locator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#A-Dynamic-Service-Locator"><span class="toc-text">A Dynamic Service Locator</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Using-both-a-locator-and-injection-with-Avalon"><span class="toc-text">Using both a locator and injection with Avalon</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Deciding-which-option-to-use"><span class="toc-text">Deciding which option to use</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Service-Locator-vs-Dependency-Injection"><span class="toc-text">Service Locator vs Dependency Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Constructor-versus-Setter-Injection"><span class="toc-text">Constructor versus Setter Injection</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Code-or-configuration-files"><span class="toc-text">Code or configuration files</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Separating-Configuration-from-Use"><span class="toc-text">Separating Configuration from Use</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Some-further-issues"><span class="toc-text">Some further issues</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Concluding-Thoughts"><span class="toc-text">Concluding Thoughts</span></a></li></ol>
           </div>
         
@@ -231,7 +231,9 @@
     <footer class="article-footer">
       <div class="article-footer-content">
         
-        <a data-url="http://yoursite.com/2016/08/24/IOC容器和Dependency Injection模式/" data-id="cisikzrng000068or7t8ejt5m" class="article-share-link">分享到</a>
+        <a data-url="localhost:4000/2016/08/24/IOC容器和Dependency Injection模式/" data-id="cisjtmd3c0004o0ordgev5c4r" class="article-share-link">分享到</a>
+        
+          <a href="localhost:4000/2016/08/24/IOC容器和Dependency Injection模式/#ds-thread" class="article-comment-link">评论</a>
         
       </div>
     </footer>
@@ -263,6 +265,11 @@
 </article>
 
 
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="2016/08/24/IOC容器和Dependency Injection模式/" data-title="IOC容器和Dependency Injection模式" data-url="localhost:4000/2016/08/24/IOC容器和Dependency Injection模式/"></div>
+  </section>
+
+
 </section>
       
       <aside id="sidebar">
@@ -274,23 +281,23 @@
       <ul>
         
           <li>
+            <a href="/2016/09/07/设计模式系列之单例模式/">设计模式系列之单例模式</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/07/设计模式系列之学习设计模式之由/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/">Tomcat处理请求过程(Tomcat源码阅读系系列之四)</a>
+          </li>
+        
+          <li>
+            <a href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/">Tomcat的Session管理</a>
+          </li>
+        
+          <li>
             <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
           </li>
         
       </ul>
@@ -300,18 +307,18 @@
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">分類</h3>
+    <h3 class="widget-title">分类</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java框架/">Java框架</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Tomcat/">Tomcat</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/开发工具/">开发工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/计算机网络/">计算机网络</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/设计模式/">设计模式</a><span class="category-list-count">2</span></li></ul>
     </div>
   </div>
 
   
     
   <div class="widget-wrap">
-    <h3 class="widget-title">歸檔</h3>
+    <h3 class="widget-title">归档</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">September 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">August 2016</a><span class="archive-list-count">10</span></li></ul>
     </div>
   </div>
 
@@ -328,6 +335,9 @@
       .
       Theme by <a href="https://github.com/sun11/hexo-theme-paperbox" target="_blank">Paperbox</a>
     </div>
+    
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1260393587'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1260393587' type='text/javascript'%3E%3C/script%3E"));</script>
+
   </div>
 </footer>
   </div>
@@ -345,7 +355,7 @@
 
 <!-- totop start -->
 <div id="totop">
-	<a title="返回頂部"></a>
+	<a title="返回顶部"></a>
 </div>
 <!-- totop end -->
 
@@ -353,6 +363,20 @@
 
 <!-- swiftype search end -->
 
+
+<!-- duoshuo start -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"woodyoilove"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0]
+     || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+  </script>
+<!-- duoshuo end -->
 
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>

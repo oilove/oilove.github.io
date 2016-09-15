@@ -5,17 +5,51 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   
-  <title>WoodyOilove&#39;s Blog</title>
+  <title>Tomcat处理请求过程(Tomcat源码阅读系系列之四) | WoodyOilove&#39;s Blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Record little growth and share littel growth">
-<meta property="og:type" content="website">
-<meta property="og:title" content="WoodyOilove's Blog">
-<meta property="og:url" content="localhost:4000/index.html">
+  <meta name="description" content="在前面的三篇文章中我们分别介绍了搭建Tomcat源码阅读环境、Tomcat的整体架构以及Tomat的启动和关闭过程，接着本文将分析Tomcat处理请求的过程。熟悉Java Socket编程的读者知道，Http的请求处理的一般过程如下：
+
+浏览器发送Http请求
+
+服务器通过Socket读取请求数据
+
+根据Http协议解析数据
+
+调用后台服务完成后响应信息。
+
+
+下面我们一步步地来看Tomcat是如">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tomcat处理请求过程(Tomcat源码阅读系系列之四)">
+<meta property="og:url" content="localhost:4000/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/index.html">
 <meta property="og:site_name" content="WoodyOilove's Blog">
-<meta property="og:description" content="Record little growth and share littel growth">
+<meta property="og:description" content="在前面的三篇文章中我们分别介绍了搭建Tomcat源码阅读环境、Tomcat的整体架构以及Tomat的启动和关闭过程，接着本文将分析Tomcat处理请求的过程。熟悉Java Socket编程的读者知道，Http的请求处理的一般过程如下：
+
+浏览器发送Http请求
+
+服务器通过Socket读取请求数据
+
+根据Http协议解析数据
+
+调用后台服务完成后响应信息。
+
+
+下面我们一步步地来看Tomcat是如">
+<meta property="og:updated_time" content="2016-09-05T08:14:59.515Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="WoodyOilove's Blog">
-<meta name="twitter:description" content="Record little growth and share littel growth">
+<meta name="twitter:title" content="Tomcat处理请求过程(Tomcat源码阅读系系列之四)">
+<meta name="twitter:description" content="在前面的三篇文章中我们分别介绍了搭建Tomcat源码阅读环境、Tomcat的整体架构以及Tomat的启动和关闭过程，接着本文将分析Tomcat处理请求的过程。熟悉Java Socket编程的读者知道，Http的请求处理的一般过程如下：
+
+浏览器发送Http请求
+
+服务器通过Socket读取请求数据
+
+根据Http协议解析数据
+
+调用后台服务完成后响应信息。
+
+
+下面我们一步步地来看Tomcat是如">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -78,115 +112,7 @@
 </header>
 
     <div class="outer">
-      <section id="main">
-  
-    <article id="post-设计模式系列之单例模式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/09/07/设计模式系列之单例模式/" class="article-date">
-  <time datetime="2016-09-06T16:00:00.000Z" itemprop="datePublished">2016-09-07</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/07/设计模式系列之单例模式/">设计模式系列之单例模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>web应用程序使用配置文件配置应用环境参数是很常见的现象，既然使用了配置文件，那么程序中必然存在读取配置文件的内容的功能模块，下面我们来实现以下简单的读取配置文件的内容，例子中使用<code>properties</code>格式配置文件，因为使用Java读取<code>properties</code>格式配置文件比较简单。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> java.io.IOException;</div><div class="line"><span class="keyword">import</span> java.io.InputStream;</div><div class="line"><span class="keyword">import</span> java.util.Properties;</div><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Config</span> </span>&#123;</div><div class="line">	<span class="comment">//用于保存参数</span></div><div class="line">    <span class="keyword">private</span> String param1;</div><div class="line">    <span class="keyword">private</span> String param2;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getParam1</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> param1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParam1</span><span class="params">(String param1)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.param1 = param1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getParam2</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> param2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setParam2</span><span class="params">(String param2)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.param2 = param2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Config</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="comment">//读取配置文件</span></div><div class="line">        readConfig();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">readConfig</span><span class="params">()</span> </span>&#123;</div><div class="line">        Properties p = <span class="keyword">new</span> Properties();</div><div class="line">        InputStream in = <span class="keyword">null</span>;</div><div class="line"></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            in = Config.class.getResourceAsStream(<span class="string">"Config.properties"</span>);</div><div class="line">            p.load(in);</div><div class="line"></div><div class="line">            <span class="keyword">this</span>.param1 = p.getProperty(<span class="string">"param1"</span>);</div><div class="line">            <span class="keyword">this</span>.param2 = p.getProperty(<span class="string">"param2"</span>);</div><div class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">            System.out.println(<span class="string">"读取配置文件出错了，具体堆栈信息如下："</span>);</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125; <span class="keyword">finally</span> &#123;</div><div class="line">            <span class="keyword">try</span> &#123;</div><div class="line">                in.close();</div><div class="line">            &#125; <span class="keyword">catch</span> (IOException e) &#123;</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">	<span class="comment">//模拟客户端进行测试</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        Config config = <span class="keyword">new</span> Config();</div><div class="line">        String param1 = config.getParam1();</div><div class="line">        String param2 = config.getParam2();</div><div class="line">        System.out.println(<span class="string">"param1: "</span>+param1);</div><div class="line">        System.out.println(<span class="string">"param2: "</span>+param2);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><em>注：上述代码需要在Config相同的包内添加配置文件，名称为Config.properties，简单示例如下：</em></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">param1 = 1</div><div class="line">param2 = 2</div></pre></td></tr></table></figure>
-<p>运行结果如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">param1: 1</div><div class="line">param2: 2</div></pre></td></tr></table></figure>
-<p>上面的实现非常简单，但是这样的做法有没有存在什么问题呢？</p>
-<p>我们看看客户端使用这个类的地方，通过new一个Config实例来得到一个操作配置文件的对象，如果在系统运行中，有多个地方需要使用配置文件的内容时，这种方案就需要在多个地方都创建Config对象的实例，换句话说系统中存在多份相同的配置文件，若是配置文件比较大的话，这样就会严重浪费内存资源，这样的方案是不可取的。对于这种情况，显然我们需要在系统运行期间，只需要实例化这个类一次，即这个类只需要一个类实例，这种设想，需要我们下面即将提到的单例模式。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/09/07/设计模式系列之单例模式/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/09/07/设计模式系列之单例模式/" data-id="cit3r5reg0004loorcjc41mng" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/09/07/设计模式系列之单例模式/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-设计模式系列之学习设计模式之由" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/09/07/设计模式系列之学习设计模式之由/" class="article-date">
-  <time datetime="2016-09-06T16:00:00.000Z" itemprop="datePublished">2016-09-07</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/设计模式/">设计模式</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <p>为什么要学习设计模式，或许这个问题每个人都能够给予你很多理由，而笔者学习的理由主要有以下两点：</p>
-<ol>
-<li>学习设计模式是个人技术能力提高的途径。设计模式是很多优秀的前辈经验的积累，大都是一些相对优秀的解决方案，很多问题也是典型的、有代表性的问题。我们通过学习设计模式，可以学习到众多优秀前辈的经验，吸收和领会他们的设计思想，掌握他们解决问题的方法，这就相当于站在这些巨人的肩膀上，可以让我们个人的技术得到快速的提升。当然，学习设计模式也是有一定的困难，需要我们在理解的基础上，思考，应用，再思考，再应用，如此反复，方能真正掌握设计模式。</li>
-<li>设计模式是解决某些特定问题的解决方案，当我们再次面对这些问题时，不用自己从头开始解决这些问题，复用这些解决方案即可。</li>
-</ol>
-
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/09/07/设计模式系列之学习设计模式之由/" data-id="cit3r5rdj0000loori5kts08o" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/09/07/设计模式系列之学习设计模式之由/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Tomcat处理请求过程（Tomcat源码阅读系列之四）" class="article article-type-post" itemscope itemprop="blogPost">
+      <section id="main"><article id="post-Tomcat处理请求过程（Tomcat源码阅读系列之四）" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <h3 href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/" class="article-date">
   <time datetime="2016-09-04T16:00:00.000Z" itemprop="datePublished">2016-09-05</time>
@@ -205,8 +131,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/">Tomcat处理请求过程(Tomcat源码阅读系系列之四)</a>
+    <h1 class="article-title" itemprop="name">
+      Tomcat处理请求过程(Tomcat源码阅读系系列之四)
     </h1>
   
 
@@ -214,6 +140,11 @@
     
     <div class="article-entry" itemprop="articleBody">
       
+        
+          <div id="toc" class="toc-article">
+            <strong class="toc-title">文章目录</strong>
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#读取请求信息"><span class="toc-text">读取请求信息</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#解析请求数据"><span class="toc-text">解析请求数据</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Adaptor转发请求到Servlet"><span class="toc-text">Adaptor转发请求到Servlet</span></a></li></ol>
+          </div>
         
         <p>在前面的三篇文章中我们分别介绍了搭建Tomcat源码阅读环境、Tomcat的整体架构以及Tomat的启动和关闭过程，接着本文将分析Tomcat处理请求的过程。熟悉Java Socket编程的读者知道，Http的请求处理的一般过程如下：</p>
 <ol>
@@ -312,399 +243,35 @@
   </div>
   </div>
   
-</article>
-
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Tomcat的Session管理（Tomcat源码阅读系列之五）" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/" class="article-date">
-  <time datetime="2016-09-04T16:00:00.000Z" itemprop="datePublished">2016-09-05</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Tomcat/">Tomcat</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
+    <a href="/2016/09/07/设计模式系列之学习设计模式之由/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">
         
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/">Tomcat的Session管理</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>前面几篇我们分析Tomcat的整体架构、生命周期、Tomcat请求处理过程，本篇文章我们将来分析一下Tomcat的Session的创建和销毁过程。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/" data-id="cit3r5red0003loorika19meu" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/#ds-thread" class="article-comment-link">评论</a>
+          (no title)
         
       </div>
-    </footer>
-  </div>
-  </div>
-  </div>
+    </a>
+  
+  
+    <a href="/2016/09/05/Tomcat的Session管理（Tomcat源码阅读系列之五）/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">Tomcat的Session管理</div>
+    </a>
+  
+</nav>
+
   
 </article>
 
 
-
-  
-    <article id="post-eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" class="article-date">
-  <time datetime="2016-08-26T16:00:00.000Z" itemprop="datePublished">2016-08-27</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/开发工具/">开发工具</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/">eclipse&amp;Myeclipse&amp;Intellij Idea源码阅读快捷键</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>“工若善其事，必先利其器”，掌握一定的快捷键将更有利于我们阅读代码，更方便地理清代码的结构，下面笔者将分享在eclipse&amp;Myeclipse和Intellij Idea这三个IDE中阅读源码时常用到的快捷键。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/" data-id="cisjtmd4o000oo0or7qpxpjpv" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/08/27/eclipse&Myeclipse&Intellij Idea源码阅读快捷键/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
+  <section id="comments">
+    <div id="ds-thread" class="ds-thread" data-thread-key="2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/" data-title="Tomcat处理请求过程(Tomcat源码阅读系系列之四)" data-url="localhost:4000/2016/09/05/Tomcat处理请求过程（Tomcat源码阅读系列之四）/"></div>
+  </section>
 
 
-
-  
-    <article id="post-IOC容器和Dependency Injection模式" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/24/IOC容器和Dependency Injection模式/" class="article-date">
-  <time datetime="2016-08-23T16:00:00.000Z" itemprop="datePublished">2016-08-24</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/24/IOC容器和Dependency Injection模式/">IOC容器和Dependency Injection模式</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>In the Java community there’s been a rush of lightweight containers that help to assemble components from different projects into a cohesive application. Underlying these containers is a common pattern to how they perform the wiring, a concept they refer under the very generic name of “Inversion of Control”. In this article I dig into how this pattern works, under the more specific name of “Dependency Injection”, and contrast it with the Service Locator alternative. The choice between them is less important than the principle of separating configuration from use.</p>
-<p>One of the entertaining things about the enterprise Java world is the huge amount of activity in building alternatives to the mainstream J2EE technologies, much of it happening in open source. A lot of this is a reaction to the heavyweight complexity in the mainstream J2EE world, but much of it is also exploring alternatives and coming up with creative ideas. A common issue to deal with is how to wire together different elements: how do you fit together this web controller architecture with that database interface backing when they were built by different teams with little knowledge of each other. A number of frameworks have taken a stab at this problem, and several are branching out to provide a general capability to assemble components from different layers. These are often referred to as lightweight containers, examples include PicoContainer, and Spring.</p>
-<p>Underlying these containers are a number of interesting design principles, things that go beyond both these specific containers and indeed the Java platform. Here I want to start exploring some of these principles. The examples I use are in Java, but like most of my writing the principles are equally applicable to other OO environments, particularly .NET.</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/24/IOC容器和Dependency Injection模式/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/08/24/IOC容器和Dependency Injection模式/" data-id="cisjtmd3c0004o0ordgev5c4r" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/08/24/IOC容器和Dependency Injection模式/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Spring MVC处理请求过程（Spring MVC源码阅读系列之二）" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" class="article-date">
-  <time datetime="2016-08-22T16:00:00.000Z" itemprop="datePublished">2016-08-23</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/">Spring MVC处理请求过程(Spring MVC源码阅读系列之二)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>本文是Spring MVC源码阅读系列的第二篇，在上一篇<a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）%2F">Spring MVC的创建过程</a>中我们介绍了SpringMVC的创建过程，本文讲给主要介绍当一个请求到达时，SpringMVC都做了些什么，即Spring MVC是如何处理请求的。</p>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>从上一篇<a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）%2F">Spring MVC的创建过程</a> 我们知道Spring的HttpServletBean继承于HttpServlet，熟悉Servlet编程的同学都知道我们要编写一个新的Servlet只需继承HttpServlet，并重写相应的方法即可，当一个新的请求到来时，首先从Servlet接口的service方法开始，在HttpServlet的service方法中根据请求的类型不同将请求路由到对应的方法，Spring MVC的HttpServlet继承于Httpservlet类，换句话说Spring MVC也是重写了HttpServlet相应的方法来处理请求，还是内有乾坤，下面我们将遵循由整体到局部的学习方式，先了解Spring MVC处理请求的整体过程。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/" data-id="cisjtmd3r0009o0oriksxat80" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/08/23/Spring MVC处理请求过程（Spring MVC源码阅读系列之二）/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Spring MVC的创建过程（SpringMVC源码阅读系列之一）" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/" class="article-date">
-  <time datetime="2016-08-17T16:00:00.000Z" itemprop="datePublished">2016-08-18</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程(SpringMVC源码阅读系列之一)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>通常我们在学习一个框架时，会先去了解这个框架的整体结构，它的基本工作方式是如何的，然后再去了解是如何使用的，最后也是不少初级程序员止步的地方，深入源码了解其实现以及实现的意图。在这篇文章中，我们主要介绍在服务器启动项目过程中，Spring MVC框架的创建过程。首先我们先来了解一下Spring MVC的整体结构</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/" data-id="cisjtmd41000do0orhqxgtowv" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/08/18/Spring MVC的创建过程（SpringMVC源码阅读系列之一）/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-Java实现简单的FTP服务器" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/17/Java实现简单的FTP服务器/" class="article-date">
-  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">2016-08-17</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java/">Java</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/17/Java实现简单的FTP服务器/">Java实现简单的FTP服务器</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>学习了Java网络编程了，为了检验自己的学习程序和熟悉相关的知识点，为此，使用Java Socket编程实现了一个简单的FTP服务器。以下记录了自己整个开发的流程。</p>
-        
-          <p class="article-more-link">
-            <a href="/2016/08/17/Java实现简单的FTP服务器/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/08/17/Java实现简单的FTP服务器/" data-id="cisjtmd3y000co0orweksdh7s" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/08/17/Java实现简单的FTP服务器/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-SpringMVC源码阅读系列" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <h3 href="/2016/08/17/SpringMVC源码阅读系列/" class="article-date">
-  <time datetime="2016-08-16T16:00:00.000Z" itemprop="datePublished">2016-08-17</time>
-</h3>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/Java框架/">Java框架</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-  <div class="curve-down">
-  <div class="fill-content">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/08/17/SpringMVC源码阅读系列/">SpringMVC源码阅读系列</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-        <p>SpringMVC框架之前有零散地阅读过源码，但缺乏系统性的整理，为此将自己阅读SpringMVC的过程重新整理记录为SpringMVC源码阅读系列。</p>
-<blockquote>
-<p>注：如没有特别说明的地方，Spring的版本是4.1.5</p>
-</blockquote>
-<p>本系列主涉及的内容有：<br><a href="/2016/08/18/Spring%20MVC的创建过程（SpringMVC源码阅读系列之一）/">Spring MVC的创建过程（SpringMVC源码阅读系列之一）</a></p>
-<p><a href="/2016/08/23/Spring%20MVC处理请求过程（Spring%20MVC源码阅读系列之二）/">Spring MVC处理请求过程(SpringMVC源码阅读系列之二)</a></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <div class="article-footer-content">
-        
-        <a data-url="localhost:4000/2016/08/17/SpringMVC源码阅读系列/" data-id="cisjtmd2y0001o0or80roi1tc" class="article-share-link">分享到</a>
-        
-          <a href="localhost:4000/2016/08/17/SpringMVC源码阅读系列/#ds-thread" class="article-comment-link">评论</a>
-        
-      </div>
-    </footer>
-  </div>
-  </div>
-  </div>
-  
-</article>
-
-
-
-  
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
-  
 </section>
       
       <aside id="sidebar">
